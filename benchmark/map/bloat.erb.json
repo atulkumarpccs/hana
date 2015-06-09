@@ -1,0 +1,46 @@
+<%
+  hana_tuple = (1..200).step(10)
+  hana_map = (1..50).step(10).to_a
+  mpl = hana_tuple
+%>
+
+
+{
+  "title": {
+    "text": "Executable size"
+  },
+  "yAxis": {
+    "title": {
+      "text": "Executable size (kb)"
+    },
+    "floor": 0
+  },
+  "tooltip": {
+    "valueSuffix": "kb"
+  },
+  "series": [
+    {
+      "name": "hana::tuple",
+      "data": <%= measure(:bloat, 'hana.tuple.erb.cpp', hana_tuple) %>
+    }, {
+      "name": "hana::map (via insert)",
+      "data": <%= measure(:bloat, 'hana.map.insert.erb.cpp', hana_map) %>
+    }, {
+      "name": "hana::map (via insert + decltype)",
+      "data": <%= measure(:bloat, 'hana.map.insert.decltype.erb.cpp', hana_map) %>
+    }, {
+      "name": "hana::map (via unpack)",
+      "data": <%= measure(:bloat, 'hana.map.unpack.erb.cpp', hana_map) %>
+    }
+
+    <% if cmake_bool("@Boost_FOUND@") %>
+    , {
+      "name": "mpl::vector",
+      "data": <%= measure(:bloat, 'mpl.vector.erb.cpp', mpl) %>
+    }, {
+      "name": "mpl::map",
+      "data": <%= measure(:bloat, 'mpl.map.erb.cpp', mpl) %>
+    }
+    <% end %>
+  ]
+}

@@ -1,0 +1,36 @@
+<%
+  hana_tuple = (1...50).step(5).to_a + (50..200).step(10).to_a
+  hana_map = (1..50).step(10).to_a
+  mpl = hana_tuple
+%>
+
+{
+  "title": {
+    "text": "Runtime behavior"
+  },
+  "series": [
+    {
+      "name": "hana::tuple",
+      "data": <%= time_execution('hana.tuple.erb.cpp', hana_tuple) %>
+    }, {
+      "name": "hana::map (via insert)",
+      "data": <%= time_execution('hana.map.insert.erb.cpp', hana_map) %>
+    }, {
+      "name": "hana::map (via insert + decltype)",
+      "data": <%= time_execution('hana.map.insert.decltype.erb.cpp', hana_map) %>
+    }, {
+      "name": "hana::map (via unpack)",
+      "data": <%= time_execution('hana.map.unpack.erb.cpp', hana_map) %>
+    }
+
+    <% if cmake_bool("@Boost_FOUND@") %>
+    , {
+      "name": "mpl::vector",
+      "data": <%= time_execution('mpl.vector.erb.cpp', mpl) %>
+    }, {
+      "name": "mpl::map",
+      "data": <%= time_execution('mpl.map.erb.cpp', mpl) %>
+    }
+    <% end %>
+  ]
+}
