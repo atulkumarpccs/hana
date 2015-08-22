@@ -28,7 +28,9 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/detail/operators/adl.hpp>
 #include <boost/hana/detail/operators/comparable.hpp>
 #include <boost/hana/detail/operators/searchable.hpp>
+#include <boost/hana/difference.hpp>
 #include <boost/hana/equal.hpp>
+#include <boost/hana/erase_key.hpp>
 #include <boost/hana/find.hpp>
 #include <boost/hana/find_if.hpp>
 #include <boost/hana/first.hpp>
@@ -39,6 +41,7 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/fwd/at_key.hpp>
 #include <boost/hana/fwd/core/convert.hpp>
 #include <boost/hana/insert.hpp>
+#include <boost/hana/intersection.hpp>
 #include <boost/hana/is_subset.hpp>
 #include <boost/hana/keys.hpp>
 #include <boost/hana/length.hpp>
@@ -46,6 +49,7 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/second.hpp>
 #include <boost/hana/transform.hpp>
 #include <boost/hana/tuple.hpp>
+#include <boost/hana/union.hpp>
 #include <boost/hana/unpack.hpp>
 #include <boost/hana/value.hpp>
 
@@ -136,56 +140,6 @@ namespace boost { namespace hana {
         return hana::transform(static_cast<Map&&>(map).storage, hana::second);
     }
     //! @endcond
-
-    //////////////////////////////////////////////////////////////////////////
-    // insert
-    //////////////////////////////////////////////////////////////////////////
-    template <>
-    struct insert_impl<map_tag> {
-        template <typename Xs, typename Pair, typename Indices>
-        static constexpr auto
-        insert_helper(Xs&& xs, Pair&&, hana::true_, Indices) {
-            return static_cast<Xs&&>(xs);
-        }
-
-        template <typename Xs, typename Pair, std::size_t ...n>
-        static constexpr auto
-        insert_helper(Xs&& xs, Pair&& pair, hana::false_, std::index_sequence<n...>) {
-            return hana::make_map(
-                hana::at_c<n>(static_cast<Xs&&>(xs).storage)..., static_cast<Pair&&>(pair)
-            );
-        }
-
-        template <typename Xs, typename Pair>
-        static constexpr auto apply(Xs&& xs, Pair&& pair) {
-            constexpr bool contains = hana::value<decltype(
-                hana::contains(xs, hana::first(pair))
-            )>();
-            constexpr std::size_t size = std::remove_reference<Xs>::type::size;
-            return insert_helper(static_cast<Xs&&>(xs), static_cast<Pair&&>(pair),
-                                 hana::bool_c<contains>, std::make_index_sequence<size>{});
-        }
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // erase_key
-    //////////////////////////////////////////////////////////////////////////
-    template <>
-    struct erase_key_impl<map_tag> {
-        template <typename M, typename Key>
-        static constexpr decltype(auto) apply(M&& map, Key&& key) {
-            return hana::unpack(
-                hana::remove_if(
-                    static_cast<M&&>(map).storage,
-                    hana::compose(
-                        hana::equal.to(static_cast<Key&&>(key)),
-                        hana::first
-                    )
-                ),
-                hana::make_map
-            );
-        }
-    };
 
     //////////////////////////////////////////////////////////////////////////
     // Comparable
@@ -288,6 +242,77 @@ namespace boost { namespace hana {
         static constexpr decltype(auto) apply(Xs&& xs) {
             return hana::fold_left(
                 static_cast<Xs&&>(xs), hana::make_map(), hana::insert
+            );
+        }
+    };
+
+    //////////////////////////////////////////////////////////////////////////
+    // AssociativeSequence
+    //////////////////////////////////////////////////////////////////////////
+    template <>
+    struct intersection_impl<map_tag> {
+        template <typename Xs, typename Ys>
+        static constexpr auto apply(Xs&& xs, Ys const& ys) {
+#error "implement me"
+        }
+    };
+
+    template <>
+    struct union_impl<map_tag> {
+        template <typename Xs, typename Ys>
+        static constexpr auto apply(Xs&& xs, Ys&& ys) {
+#error "implement me"
+        }
+    };
+
+    template <>
+    struct difference_impl<map_tag> {
+        template <typename Xs, typename Ys>
+        static constexpr auto apply(Xs&& xs, Ys&& ys) {
+#error "implement me"
+        }
+    };
+
+    template <>
+    struct insert_impl<map_tag> {
+        template <typename Xs, typename Pair, typename Indices>
+        static constexpr auto
+        insert_helper(Xs&& xs, Pair&&, hana::true_, Indices) {
+            return static_cast<Xs&&>(xs);
+        }
+
+        template <typename Xs, typename Pair, std::size_t ...n>
+        static constexpr auto
+        insert_helper(Xs&& xs, Pair&& pair, hana::false_, std::index_sequence<n...>) {
+            return hana::make_map(
+                hana::at_c<n>(static_cast<Xs&&>(xs).storage)..., static_cast<Pair&&>(pair)
+            );
+        }
+
+        template <typename Xs, typename Pair>
+        static constexpr auto apply(Xs&& xs, Pair&& pair) {
+            constexpr bool contains = hana::value<decltype(
+                hana::contains(xs, hana::first(pair))
+            )>();
+            constexpr std::size_t size = std::remove_reference<Xs>::type::size;
+            return insert_helper(static_cast<Xs&&>(xs), static_cast<Pair&&>(pair),
+                                 hana::bool_c<contains>, std::make_index_sequence<size>{});
+        }
+    };
+
+    template <>
+    struct erase_key_impl<map_tag> {
+        template <typename M, typename Key>
+        static constexpr decltype(auto) apply(M&& map, Key&& key) {
+            return hana::unpack(
+                hana::remove_if(
+                    static_cast<M&&>(map).storage,
+                    hana::compose(
+                        hana::equal.to(static_cast<Key&&>(key)),
+                        hana::first
+                    )
+                ),
+                hana::make_map
             );
         }
     };

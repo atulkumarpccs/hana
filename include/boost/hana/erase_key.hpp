@@ -16,18 +16,22 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    struct AssociativeSequence; //! @todo include the forward declaration instead
+
     //! @cond
-    template <typename Set, typename ...Args>
-    constexpr decltype(auto) erase_key_t::operator()(Set&& set, Args&& ...args) const {
-        return erase_key_impl<typename hana::tag_of<Set>::type>::apply(
-            static_cast<Set&&>(set),
-            static_cast<Args&&>(args)...
+    template <typename Xs, typename Key>
+    constexpr decltype(auto) erase_key_t::operator()(Xs&& xs, Key&& key) const {
+        using S = typename datatype<Xs>::type;
+        using EraseKey = BOOST_HANA_DISPATCH_IF(erase_key_impl<S>,
+            AssociativeSequence<S>::value
         );
+
+        return EraseKey::apply(static_cast<Xs&&>(xs), static_cast<Key&&>(key));
     }
     //! @endcond
 
-    template <typename T, bool condition>
-    struct erase_key_impl<T, when<condition>> : default_ {
+    template <typename S, bool condition>
+    struct erase_key_impl<S, when<condition>> : default_ {
         template <typename ...Args>
         static constexpr auto apply(Args&& ...) = delete;
     };

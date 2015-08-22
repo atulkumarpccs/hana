@@ -14,15 +14,33 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
-    // Note: This function is documented per datatype/concept only.
-    //! @cond
-    template <typename T, typename = void>
-    struct erase_key_impl : erase_key_impl<T, when<true>> { };
-    //! @endcond
+    //! @todo Brief description
+    //! @relates AssociativeSequence
+    //!
+    //! @todo Detailed description
+    //!
+    //!
+    //! @param xs
+    //! @todo
+    //!
+    //! @param ys
+    //! @todo
+    //!
+    //!
+    //! Example
+    //! -------
+    //! @include example/erase_key.cpp
+#ifdef BOOST_HANA_DOXYGEN_INVOKED
+    constexpr auto erase_key = [](auto&& xs, auto&& key) {
+        return tag-dispatched;
+    };
+#else
+    template <typename S, typename = void>
+    struct erase_key_impl : erase_key_impl<S, when<true>> { };
 
     struct erase_key_t {
-        template <typename Set, typename ...Args>
-        constexpr decltype(auto) operator()(Set&& set, Args&& ...args) const;
+        template <typename Xs, typename Key>
+        constexpr decltype(auto) operator()(Xs&& xs, Key&& key) const;
     };
 
     constexpr erase_key_t erase_key{};
