@@ -37,12 +37,18 @@ namespace boost { namespace hana {
     template <typename L, typename = void>
     struct and_impl : and_impl<L, when<true>> { };
 
+    template <typename T, T v>
+    struct _integral_constant;
+
     struct and_t {
         template <typename X, typename Y>
         constexpr decltype(auto) operator()(X&& x, Y&& y) const;
 
         template <typename X, typename ...Y>
         constexpr decltype(auto) operator()(X&& x, Y&& ...y) const;
+
+        template <typename T, T ...v>
+        constexpr decltype(auto) operator()(_integral_constant<T, v> const&...) const;
     };
 
     constexpr and_t and_{};

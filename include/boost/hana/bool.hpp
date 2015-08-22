@@ -14,7 +14,9 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/hana/concept/integral_constant.hpp>
 #include <boost/hana/core/convert.hpp>
+#include <boost/hana/core/datatype.hpp>
 #include <boost/hana/core/when.hpp>
+#include <boost/hana/detail/fast_and.hpp>
 #include <boost/hana/detail/operators/arithmetic.hpp>
 #include <boost/hana/detail/operators/comparable.hpp>
 #include <boost/hana/detail/operators/logical.hpp>
@@ -215,6 +217,13 @@ namespace boost { namespace hana {
         apply(hana::false_ const&, Then&&, Else&& e)
         { return static_cast<Else&&>(e); }
     };
+
+    //! @cond
+    template <typename T, T ...v>
+    constexpr decltype(auto) and_t::operator()(hana::_integral_constant<T, v> const&...) const {
+        return hana::bool_<detail::fast_and<static_cast<bool>(v)...>::value>;
+    }
+    //! @endcond
 }} // end namespace boost::hana
 
 #endif // !BOOST_HANA_BOOL_HPP
