@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/concept/searchable.hpp>
 #include <boost/hana/config.hpp>
 #include <boost/hana/core/dispatch.hpp>
-#include <boost/hana/functional/compose.hpp>
 #include <boost/hana/not.hpp>
 
 
@@ -38,12 +37,23 @@ BOOST_HANA_NAMESPACE_BEGIN
     }
     //! @endcond
 
+    namespace detail {
+        template <typename Pred>
+        struct negate {
+            Pred const& pred;
+            template <typename T>
+            constexpr auto operator()(T&& t) const {
+                return hana::not_(pred(static_cast<T&&>(t)));
+            }
+        };
+    }
+
     template <typename S, bool condition>
     struct all_of_impl<S, when<condition>> : default_ {
         template <typename Xs, typename Pred>
-        static constexpr auto apply(Xs&& xs, Pred&& pred) {
+        static constexpr auto apply(Xs&& xs, Pred const& pred) {
             return hana::not_(hana::any_of(static_cast<Xs&&>(xs),
-                    hana::compose(hana::not_, static_cast<Pred&&>(pred))));
+                                           detail::negate<Pred>{pred}));
         }
     };
 BOOST_HANA_NAMESPACE_END
