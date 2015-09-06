@@ -6,6 +6,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <boost/hana/assert.hpp>
 #include <boost/hana/concept/metafunction.hpp>
+#include <boost/hana/core/is_a.hpp>
 #include <boost/hana/equal.hpp>
 #include <boost/hana/type.hpp>
 
@@ -276,62 +277,34 @@ namespace tc3 {
     }
 }
 
-// integral
+// trait
 namespace tc4 {
-    template <typename ...> struct mf { struct type { }; };
-    struct mfc { template <typename ...> struct apply { struct type { }; }; };
-    template <typename ...> struct tpl { };
+    template <typename ...T>
+    struct pack_size {
+        using type = std::integral_constant<int, sizeof...(T)>;
+    };
 
-    // make sure `integral(f)(...)` returns the right type
-    static_assert(std::is_same<
-        decltype(integral(metafunction<mf>)()),
-        mf<>::type
-    >{}, "");
-    static_assert(std::is_same<
-        decltype(integral(metafunction<mf>)(type_c<x1>)),
-        mf<x1>::type
-    >{}, "");
-    static_assert(std::is_same<
-        decltype(integral(metafunction<mf>)(type_c<x1>, type_c<x2>)),
-        mf<x1, x2>::type
-    >{}, "");
+    // Check that it works, and make sure `trait<F>` returns a hana::integral_constant
+    constexpr auto p_0 = trait<pack_size>();
+    BOOST_HANA_CONSTANT_CHECK(equal(p_0, integral_c<int, 0>));
+    BOOST_HANA_CONSTANT_CHECK(is_a<integral_constant_tag<int>>(p_0));
 
-    static_assert(std::is_same<
-        decltype(integral(template_<tpl>)()),
-        tpl<>
-    >{}, "");
-    static_assert(std::is_same<
-        decltype(integral(template_<tpl>)(type_c<x1>)),
-        tpl<x1>
-    >{}, "");
-    static_assert(std::is_same<
-        decltype(integral(template_<tpl>)(type_c<x1>, type_c<x2>)),
-        tpl<x1, x2>
-    >{}, "");
+    constexpr auto p_1 = trait<pack_size>(type_c<x1>);
+    BOOST_HANA_CONSTANT_CHECK(equal(p_1, integral_c<int, 1>));
+    BOOST_HANA_CONSTANT_CHECK(is_a<integral_constant_tag<int>>(p_1));
 
-    static_assert(std::is_same<
-        decltype(integral(metafunction_class<mfc>)()),
-        mfc::apply<>::type
-    >{}, "");
-    static_assert(std::is_same<
-        decltype(integral(metafunction_class<mfc>)(type_c<x1>)),
-        mfc::apply<x1>::type
-    >{}, "");
-    static_assert(std::is_same<
-        decltype(integral(metafunction_class<mfc>)(type_c<x1>, type_c<x2>)),
-        mfc::apply<x1, x2>::type
-    >{}, "");
+    constexpr auto p_2 = trait<pack_size>(type_c<x1>, type_c<x2>);
+    BOOST_HANA_CONSTANT_CHECK(equal(p_2, integral_c<int, 2>));
+    BOOST_HANA_CONSTANT_CHECK(is_a<integral_constant_tag<int>>(p_2));
 
+    constexpr auto p_3 = trait<pack_size>(type_c<x1>, type_c<x2>, type_c<x3>);
+    BOOST_HANA_CONSTANT_CHECK(equal(p_3, integral_c<int, 3>));
+    BOOST_HANA_CONSTANT_CHECK(is_a<integral_constant_tag<int>>(p_3));
+
+    // Make sure we don't read from a non-constexpr variable
     void fun() {
-        // Make sure we can perform the call; we already made sure the return type was correct
-        constexpr auto a = integral(metafunction<mf>)(); (void)a;
-        constexpr auto b = integral(metafunction<mf>)(type_c<x1>); (void)b;
-        constexpr auto c = integral(metafunction<mf>)(type_c<x1>, type_c<x2>); (void)c;
-        constexpr auto d = integral(metafunction<mf>)(type_c<x1>, type_c<x2>, type_c<x3>); (void)d;
-
-        // Make sure we don't read from a non-constexpr variable
         auto t = type_c<x1>;
-        constexpr auto r = integral(metafunction<mf>)(t);
+        constexpr auto r = trait<pack_size>(t);
         (void)r;
     }
 }

@@ -396,64 +396,43 @@ namespace boost { namespace hana {
     constexpr metafunction_class_t<F> metafunction_class{};
 #endif
 
-    //! Turn a `Metafunction` into a function taking `type`s and returning a
-    //! default-constructed object.
+    //! Turn a classic metafunction returning an IntegralConstant into a
+    //! function returning a `hana::integral_constant`.
     //! @relates Metafunction
     //!
-    //! Given a `Metafunction` `f`, `integral` returns a new `Metafunction`
-    //! that default-constructs an object of the type returned by `f`. More
-    //! specifically, the following holds:
+    //! Given a classic metafunction `F`, `trait<F>` is a function object
+    //! returning the result of applying `F` on its arguments as a
+    //! `hana::integral_constant`. More specifically, the following holds:
     //! @code
-    //!     integral(f)(t...) == decltype(f(t...))::type{}
+    //!     trait<F>(type<T>{}...) == integral_c<F<T...>::type::value_type, F<T...>::value>
     //! @endcode
     //!
-    //! The principal use case for `integral` is to transform `Metafunction`s
-    //! returning a type that inherits from a meaningful base like
-    //! `std::integral_constant` into functions returning e.g. a
-    //! `hana::integral_constant`.
+    //! The use case for `trait` is to transform a classic metafunction
+    //! returning an `IntegralConstant` (e.g. `std::is_pointer`) into a
+    //! Hana-style function object returning an `IntegralConstant`.
     //!
     //! @note
-    //! - This is not a `Metafunction` because it does not return a `type`.
-    //!   As such, it would not make sense to make `decltype(integral(f))`
-    //!   a MPL metafunction class like the usual `Metafunction`s are.
-    //!
-    //! - When using `integral` with metafunctions returning
-    //!   `std::integral_constant`s, don't forget to include the
-    //!   boost/hana/ext/std/integral_constant.hpp header to ensure
-    //!   Hana can interoperate with the result.
-    //!
-    //!
-    //! Example
-    //! -------
-    //! @include example/type/integral.cpp
-#ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto integral = [](auto f) {
-        return [](basic_type<T>-or-T ...) {
-            return decltype(f)::apply<T...>::type{};
-        };
-    };
-#else
-    template <typename F>
-    struct integral_t;
-
-    struct make_integral_t {
-        template <typename F>
-        constexpr integral_t<F> operator()(F const&) const
-        { return {}; }
-    };
-
-    constexpr make_integral_t integral{};
-#endif
-
-    //! Alias to `integral(metafunction<F>)`, provided for convenience.
-    //! @relates Metafunction
+    //! This is not a `Metafunction` because it does not return a `type`.
+    //! but it is still documented along with `Metafunction`s because they
+    //! are closely related.
     //!
     //!
     //! Example
     //! -------
     //! @include example/type/trait.cpp
+#ifdef BOOST_HANA_DOXYGEN_INVOKED
     template <template <typename ...> class F>
-    constexpr auto trait = hana::integral(hana::metafunction<F>);
+    constexpr auto trait = [](basic_type<T>-or-T ...) {
+        using Result = typename F<T...>::type;
+        return hana::integral_c<typename Result::value_type, Result::value>;
+    };
+#else
+    template <template <typename ...> class F>
+    struct trait_t;
+
+    template <template <typename ...> class F>
+    constexpr trait_t<F> trait{};
+#endif
 }} // end namespace boost::hana
 
 #endif // !BOOST_HANA_FWD_TYPE_HPP
