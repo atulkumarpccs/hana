@@ -71,6 +71,7 @@ namespace boost {
 #include <boost/hana/at.hpp>
 #include <boost/hana/at_key.hpp>
 #include <boost/hana/back.hpp>
+#include <boost/hana/basic_set.hpp>
 #include <boost/hana/basic_tuple.hpp>
 #include <boost/hana/bool.hpp>
 #include <boost/hana/cartesian_product.hpp>
