@@ -9,6 +9,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 #include <laws/comparable.hpp>
 #include <laws/constant.hpp>
+#include <laws/enumerable.hpp>
 #include <laws/euclidean_ring.hpp>
 #include <laws/group.hpp>
 #include <laws/logical.hpp>
@@ -35,6 +36,9 @@ int main() {
     // Constant
     hana::test::TestConstant<hana::detail::CanonicalConstant<int>>{ints, hana::tuple_t<int, long, long long>};
     hana::test::TestConstant<hana::detail::CanonicalConstant<bool>>{bools, hana::tuple_t<bool>};
+
+    // Enumerable
+    hana::test::TestEnumerable<hana::detail::CanonicalConstant<int>>{ints};
 
     // Monoid, Group, Ring, EuclideanRing
     hana::test::TestMonoid<hana::detail::CanonicalConstant<int>>{ints};

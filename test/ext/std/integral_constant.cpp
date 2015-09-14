@@ -13,6 +13,7 @@ Distributed under the Boost Software License, Version 1.0.
 #include <laws/base.hpp>
 #include <laws/comparable.hpp>
 #include <laws/constant.hpp>
+#include <laws/enumerable.hpp>
 #include <laws/euclidean_ring.hpp>
 #include <laws/group.hpp>
 #include <laws/logical.hpp>
@@ -105,9 +106,10 @@ int main() {
 
 #elif BOOST_HANA_TEST_PART == 3
     //////////////////////////////////////////////////////////////////////////
-    // Monoid, Group, Ring, EuclideanRing
+    // Enumerable, Monoid, Group, Ring, EuclideanRing
     //////////////////////////////////////////////////////////////////////////
     {
+        test::TestEnumerable<ext::std::integral_constant_tag<int>>{ints};
         test::TestMonoid<ext::std::integral_constant_tag<int>>{ints};
         test::TestGroup<ext::std::integral_constant_tag<int>>{ints};
         test::TestRing<ext::std::integral_constant_tag<int>>{ints};
