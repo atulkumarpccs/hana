@@ -8,10 +8,16 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/tuple.hpp>
 
 #include <string>
+#include <type_traits>
 namespace hana = boost::hana;
 
 
 struct Empty { };
+
+struct NoCopy {
+    NoCopy() = default;
+    NoCopy(NoCopy const&) = delete;
+};
 
 int main() {
     {
@@ -66,5 +72,15 @@ int main() {
 
         (void)copy_implicit;
         (void)copy_explicit;
+    }
+    {
+        // Make sure this does not trigger a hard error
+        static_assert(!std::is_copy_constructible<
+            hana::tuple<NoCopy>
+        >{}, "");
+
+        static_assert(!std::is_copy_constructible<
+            hana::tuple<NoCopy, NoCopy>
+        >{}, "");
     }
 }

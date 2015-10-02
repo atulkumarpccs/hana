@@ -27,6 +27,12 @@ struct MoveOnly {
     bool operator< (const MoveOnly& x) const { return data_ <  x.data_; }
 };
 
+struct NoMove {
+    NoMove() = default;
+    NoMove(NoMove const&) = delete;
+    NoMove(NoMove&&) = delete;
+};
+
 int main() {
     {
         using T = hana::tuple<>;
@@ -70,6 +76,16 @@ int main() {
 
         static_assert(std::is_constructible<
             hana::tuple<MoveOnly>, MoveOnly&&
+        >{}, "");
+    }
+    {
+        // Make sure this does not trigger a hard error
+        static_assert(!std::is_move_constructible<
+            hana::tuple<NoMove>
+        >{}, "");
+
+        static_assert(!std::is_move_constructible<
+            hana::tuple<NoMove, NoMove>
         >{}, "");
     }
 }
