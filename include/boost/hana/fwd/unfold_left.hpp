@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-generation
     //! Dual operation to `fold_left` for sequences.
     //! @relates Sequence
     //!

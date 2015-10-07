@@ -16,6 +16,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-query
     //! Returns the `n`th element of an iterable.
     //! @relates Iterable
     //!

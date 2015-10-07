@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-query
     //! Returns the last element of a non-empty and finite iterable.
     //! @relates Iterable
     //!

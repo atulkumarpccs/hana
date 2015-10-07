@@ -11,6 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_REVERSE_FOLD_HPP
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-summary
     //! Equivalent to `reverse_fold` in Boost.Fusion and Boost.MPL.
     //! @relates Foldable
     //!

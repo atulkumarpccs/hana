@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-transformation
     //! Drop the first `n` elements of an iterable, and return the rest.
     //! @relates Iterable
     //!

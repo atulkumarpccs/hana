@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-query
     //! Returns whether any key of the structure satisfies the `predicate`.
     //! @relates Searchable
     //!

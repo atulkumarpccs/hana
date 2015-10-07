@@ -15,6 +15,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-transformation
     //! Returns a `Product` containing the longest prefix of a sequence
     //! satisfying a predicate, and the rest of the sequence.
     //! @relates Sequence

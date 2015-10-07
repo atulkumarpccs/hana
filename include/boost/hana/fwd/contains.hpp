@@ -17,6 +17,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-set
     //! Returns whether the key occurs in the structure.
     //! @relates Searchable
     //!
@@ -54,6 +55,7 @@ namespace boost { namespace hana {
     constexpr auto contains = hana::infix(contains_t{});
 #endif
 
+    //! @ingroup group-algorithms-set
     //! Return whether the key occurs in the structure.
     //! @relates Searchable
     //!

@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-generation
     //! Fold a Sequence to the right and return a list containing the
     //! successive reduction states.
     //! @relates Sequence

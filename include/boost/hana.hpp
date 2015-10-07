@@ -17,6 +17,29 @@ Distributed under the Boost Software License, Version 1.0.
 //! @defgroup group-datatypes Data types
 //! General purpose data types provided by the library.
 
+//! @defgroup group-algorithms Algorithms
+//! General purpose algorithms provided by the library.
+
+//! @ingroup group-algorithms
+//! @defgroup group-algorithms-transformation Transformation algorithms
+//! ???
+
+//! @ingroup group-algorithms
+//! @defgroup group-algorithms-query Query algorithms
+//! ???
+
+//! @ingroup group-algorithms
+//! @defgroup group-algorithms-generation Generation algorithms
+//! ???
+
+//! @ingroup group-algorithms
+//! @defgroup group-algorithms-summary Summarizing algorithms
+//! ???
+
+//! @ingroup group-algorithms
+//! @defgroup group-algorithms-set Set-theoretic operations
+//! ???
+
 //! @defgroup group-functional Functional
 //! General purpose function objects.
 

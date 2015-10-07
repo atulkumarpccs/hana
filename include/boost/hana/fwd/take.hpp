@@ -16,6 +16,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-transformation
     //! Returns the first `n` elements of a sequence, or the whole sequence
     //! if the sequence has less than `n` elements.
     //! @relates Sequence

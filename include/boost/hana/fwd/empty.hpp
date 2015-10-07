@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-generation
     //! Identity of the monadic combination `concat`.
     //! @relates MonadPlus
     //!

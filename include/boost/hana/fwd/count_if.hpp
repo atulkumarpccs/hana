@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-query
     //! Return the number of elements in the structure for which the
     //! `predicate` is satisfied.
     //! @relates Foldable

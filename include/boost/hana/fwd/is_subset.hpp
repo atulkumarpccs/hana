@@ -16,6 +16,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-set
     //! Returns whether a structure contains a subset of the keys of
     //! another structure.
     //! @relates Searchable

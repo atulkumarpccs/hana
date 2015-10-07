@@ -28,6 +28,7 @@ namespace boost { namespace hana {
     constexpr insert_t insert{};
 
 
+    //! @ingroup group-algorithms-transformation
     //! Insert a value at a given index in a sequence.
     //! @relates Sequence
     //!

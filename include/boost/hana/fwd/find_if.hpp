@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-query
     //! Finds the value associated to the first key satisfying a predicate.
     //! @relates Searchable
     //!

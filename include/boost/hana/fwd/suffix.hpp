@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-transformation
     //! Inserts a value after each element of a monadic structure.
     //! @relates MonadPlus
     //!

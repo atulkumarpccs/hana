@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-summary
     //! Monadic right-fold of a structure with a binary operation and an
     //! optional initial reduction state.
     //! @relates Foldable

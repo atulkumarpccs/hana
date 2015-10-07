@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-summary
     //! Equivalent to `fold_left`; provided for convenience.
     //! @relates Foldable
     //!

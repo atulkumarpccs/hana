@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-transformation
     //! Drop elements from an iterable up to, but excluding, the first
     //! element for which the `predicate` is not satisfied.
     //! @relates Iterable

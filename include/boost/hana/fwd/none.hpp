@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-query
     //! Returns whether all of the keys of the structure are false-valued.
     //! @relates Searchable
     //!

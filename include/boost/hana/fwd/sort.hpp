@@ -15,6 +15,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-transformation
     //! Sort a sequence, optionally based on a custom `predicate`.
     //! @relates Sequence
     //!

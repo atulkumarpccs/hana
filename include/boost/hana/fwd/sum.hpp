@@ -15,6 +15,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-summary
     //! Compute the sum of the numbers of a structure.
     //! @relates Foldable
     //!

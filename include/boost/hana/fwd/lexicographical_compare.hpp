@@ -14,6 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-query
     //! Short-circuiting lexicographical comparison of two `Iterable`s with
     //! an optional custom predicate, by default `hana::less`.
     //! @relates Iterable
