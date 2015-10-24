@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Remove all the elements of a monadic structure that satisfy some
     //! predicate.
-    //! @relates MonadPlus
     //!
     //! Given a monadic structure `xs` and a unary predicate, `remove_if`
     //! returns a new monadic structure equal to `xs` without all its elements

@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-summary
     //! Equivalent to `fold_left`; provided for convenience.
-    //! @relates Foldable
     //!
     //! `fold` is equivalent to `fold_left`. However, it is not tag-dispatched
     //! on its own because it is just an alias to `fold_left`. Also note that

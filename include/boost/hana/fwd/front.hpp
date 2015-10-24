@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Returns the first element of a non-empty iterable.
-    //! @relates Iterable
     //!
     //! Given a non-empty Iterable `xs` with a linearization of `[x1, ..., xN]`,
     //! `front(xs)` is equal to `x1`. If `xs` is empty, it is an error to

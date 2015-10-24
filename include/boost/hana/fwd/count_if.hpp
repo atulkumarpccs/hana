@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Return the number of elements in the structure for which the
     //! `predicate` is satisfied.
-    //! @relates Foldable
     //!
     //! Specifically, returns an object of an unsigned integral type, or
     //! a `Constant` holding such an object, which represents the number

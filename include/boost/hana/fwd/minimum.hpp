@@ -18,7 +18,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-summary
     //! Return the least element of a non-empty structure with respect to
     //! a `predicate`, by default `less`.
-    //! @relates Foldable
     //!
     //! Given a non-empty structure and an optional binary predicate
     //! (`less` by default), `minimum` returns the least element of

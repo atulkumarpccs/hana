@@ -19,7 +19,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-set
     //! Returns whether a structure contains a subset of the keys of
     //! another structure.
-    //! @relates Searchable
     //!
     //! Given two `Searchable`s `xs` and `ys`, `is_subset` returns a `Logical`
     //! representing whether `xs` is a subset of `ys`. In other words, it

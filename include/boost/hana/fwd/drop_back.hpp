@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Drop the last `n` elements of a finite sequence, and return the rest.
-    //! @relates Sequence
     //!
     //! Given a finite `Sequence` `xs` with a linearization of `[x1, ..., xm]`
     //! and a non-negative `IntegralConstant` `n`, `drop_back(xs, n)` is a

@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Reverse a sequence.
-    //! @relates Sequence
     //!
     //! Specifically, `reverse(xs)` is a new sequence containing the same
     //! elements as `xs`, except in reverse order.

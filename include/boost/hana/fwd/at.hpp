@@ -18,7 +18,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Returns the `n`th element of an iterable.
-    //! @relates Iterable
     //!
     //! Given an `Iterable` and an `IntegralConstant` index, `at` returns the
     //! element located at the index in the linearization of the iterable.

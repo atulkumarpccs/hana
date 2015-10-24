@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Filter a monadic structure using a custom predicate.
-    //! @relates MonadPlus
     //!
     //! Given a monadic structure and a predicate, `filter` returns a new
     //! monadic structure containing only those elements that satisfy the

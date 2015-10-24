@@ -19,7 +19,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Returns the first `n` elements of a sequence, or the whole sequence
     //! if the sequence has less than `n` elements.
-    //! @relates Sequence
     //!
     //! Given a `Sequence` `xs` and an `IntegralConstant` `n`, `take(xs, n)`
     //! is a new sequence containing the first `n` elements of `xs`, in the

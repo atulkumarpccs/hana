@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Drop elements from an iterable up to, but excluding, the first
     //! element for which the `predicate` is not satisfied.
-    //! @relates Iterable
     //!
     //! Specifically, `drop_while` returns an iterable containing all the
     //! elements of the original iterable except for those in the range

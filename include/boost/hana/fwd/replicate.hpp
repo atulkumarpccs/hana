@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-generation
     //! Create a monadic structure by combining a lifted value with itself
     //! `n` times.
-    //! @relates MonadPlus
     //!
     //! Given a value `x`, a non-negative `IntegralConstant` `n` and the tag
     //! of a monadic structure `M`, `replicate` creates a new monadic structure

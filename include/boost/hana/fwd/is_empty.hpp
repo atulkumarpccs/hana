@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Returns whether the iterable is empty.
-    //! @relates Iterable
     //!
     //! Given an `Iterable` `xs`, `is_empty` returns whether `xs` contains
     //! no more elements. In other words, it returns whether trying to

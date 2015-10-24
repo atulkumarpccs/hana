@@ -13,7 +13,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! Transform a function taking multiple arguments into a function that
     //! can be called with a compile-time `Foldable`.
-    //! @relates Foldable
     //!
     //!
     //! This function is provided for convenience as a different way of

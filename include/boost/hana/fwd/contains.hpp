@@ -19,7 +19,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-set
     //! Returns whether the key occurs in the structure.
-    //! @relates Searchable
     //!
     //! Given a `Searchable` structure `xs` and a `key`, `contains` returns
     //! whether any of the keys of the structure is equal to the given `key`.

@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-generation
     //! Return a sequence of all the permutations of the given sequence.
-    //! @relates Sequence
     //!
     //! Specifically, `permutations(xs)` is a sequence whose elements are
     //! permutations of the original sequence `xs`. The permutations are not

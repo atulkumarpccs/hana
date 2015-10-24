@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Returns whether all the keys of the structure satisfy the `predicate`.
-    //! @relates Searchable
     //!
     //! If the structure is not finite, `predicate` has to return a false-
     //! valued `Logical` after looking at a finite number of keys for this

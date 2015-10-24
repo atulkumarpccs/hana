@@ -18,7 +18,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Partition a sequence based on a `predicate`.
-    //! @relates Sequence
     //!
     //! Specifically, returns an unspecified `Product` whose first element is
     //! a sequence of the elements satisfying the predicate, and whose second

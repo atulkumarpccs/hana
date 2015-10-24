@@ -13,7 +13,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-summary
     //! Equivalent to `reverse_fold` in Boost.Fusion and Boost.MPL.
-    //! @relates Foldable
     //!
     //! This method has the same semantics as `reverse_fold` in Boost.Fusion
     //! and Boost.MPL, with the extension that an initial state is not

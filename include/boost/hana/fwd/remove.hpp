@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Remove all the elements of a monadic structure that are equal to some
     //! value.
-    //! @relates MonadPlus
     //!
     //! Given a monadic structure `xs` and a `value`, `remove` returns a new
     //! monadic structure equal to `xs` without all its elements that are

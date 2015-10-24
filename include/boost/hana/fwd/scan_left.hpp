@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-generation
     //! Fold a Sequence to the left and return a list containing the
     //! successive reduction states.
-    //! @relates Sequence
     //!
     //! Like `fold_left`, `scan_left` reduces a sequence to a single value
     //! using a binary operation. However, unlike `fold_left`, it builds up

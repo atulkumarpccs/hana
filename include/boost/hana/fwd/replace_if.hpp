@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Replace all the elements of a structure satisfying a `predicate`
     //! with a fixed value.
-    //! @relates Functor
     //!
     //!
     //! Signature

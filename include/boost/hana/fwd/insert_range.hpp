@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Insert several values at a given index in a sequence.
-    //! @relates Sequence
     //!
     //! Given a sequence, an index and any `Foldable` containing elements to
     //! insert, `insert_range` inserts the elements in the `Foldable` at the

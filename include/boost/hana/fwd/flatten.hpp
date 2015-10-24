@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Collapse two levels of monadic structure into a single level.
-    //! @relates Monad
     //!
     //! Given a monadic value wrapped into two levels of monad, `flatten`
     //! removes one such level. An implementation of `flatten` must satisfy

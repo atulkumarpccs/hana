@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-set
     //! Returns the set-theoretic difference of two sets.
-    //! @relates hana::set
     //!
     //! Given two sets `xs` and `ys`, `difference(xs, ys)` is a new set
     //! containing all the elements of `xs` that are _not_ contained in `ys`.

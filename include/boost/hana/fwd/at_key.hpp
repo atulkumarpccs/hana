@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Returns the value associated to the given key in a structure, or fail.
-    //! @relates Searchable
     //!
     //! Given a `key` and a `Searchable` structure, `at_key` returns the first
     //! value whose key is equal to the given `key`, and fails at compile-time

@@ -17,7 +17,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Removes all consecutive duplicate elements from a Sequence.
-    //! @relates Sequence
     //!
     //! Given a `Sequence` and an optional binary predicate, `unique` returns
     //! a new sequence containing only the first element of every subrange

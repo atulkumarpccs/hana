@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Returns whether any key of the structure is true-valued.
-    //! @relates Searchable
     //!
     //! The keys of the structure must be `Logical`s. If the structure is not
     //! finite, a true-valued key must appear at a finite "index" in order for

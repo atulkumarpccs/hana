@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Combine two monadic structures together.
-    //! @relates MonadPlus
     //!
     //! Given two monadic structures, `concat` combines them together and
     //! returns a new monadic structure. The exact definition of `concat`

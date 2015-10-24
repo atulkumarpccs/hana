@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Apply a function on all the elements of a structure that compare
     //! equal to some value.
-    //! @relates Functor
     //!
     //!
     //! Signature

@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-set
     //! Returns whether two `Searchable`s are disjoint.
-    //! @relates Searchable
     //!
     //! Given two `Searchable`s `xs` and `ys`, `is_disjoint` returns a
     //! `Logical` representing whether the keys in `xs` are disjoint from

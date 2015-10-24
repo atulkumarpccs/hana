@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-summary
     //! Monadic right-fold of a structure with a binary operation and an
     //! optional initial reduction state.
-    //! @relates Foldable
     //!
     //! @note
     //! This assumes the reader to be accustomed to non-monadic right-folds as

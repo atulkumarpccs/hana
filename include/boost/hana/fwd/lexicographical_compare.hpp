@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Short-circuiting lexicographical comparison of two `Iterable`s with
     //! an optional custom predicate, by default `hana::less`.
-    //! @relates Iterable
     //!
     //! Given two `Iterable`s `xs` and `ys` and a binary predicate `pred`,
     //! `lexicographical_compare` returns whether `xs` is to be considered

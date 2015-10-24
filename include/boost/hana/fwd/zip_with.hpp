@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Zip one sequence or more with a given function.
-    //! @relates Sequence
     //!
     //! Given a `n`-ary function `f` and `n` sequences `s1, ..., sn`,
     //! `zip_with` produces a sequence whose `i`-th element is

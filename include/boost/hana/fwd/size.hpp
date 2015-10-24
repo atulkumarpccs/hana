@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Equivalent to `length`; provided for consistency with the
     //! standard library.
-    //! @relates Foldable
     //!
     //! This method is an alias to `length` provided for convenience and
     //! consistency with the standard library. As an alias, `size` is not

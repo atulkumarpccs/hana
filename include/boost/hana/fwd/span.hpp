@@ -18,7 +18,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Returns a `Product` containing the longest prefix of a sequence
     //! satisfying a predicate, and the rest of the sequence.
-    //! @relates Sequence
     //!
     //! The first component of the returned `Product` is a sequence for which
     //! all elements satisfy the given predicate. The second component of the

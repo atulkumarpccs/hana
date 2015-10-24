@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Returns a new iterable containing all but the first element of a
     //! non-empty iterable.
-    //! @relates Iterable
     //!
     //! Given a non-empty Iterable `xs` with a linearization of `[x1, ..., xN]`,
     //! `tail(xs)` is an Iterable with the same tag whose linearization is

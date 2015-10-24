@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Take elements from a sequence while the `predicate` is satisfied.
-    //! @relates Sequence
     //!
     //! Specifically, `take_while` returns a new sequence containing the
     //! longest prefix of `xs` in which all the elements satisfy the given

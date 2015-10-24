@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Return the number of elements in the structure that compare equal to
     //! a given value.
-    //! @relates Foldable
     //!
     //! Given a Foldable structure `xs` and a value `value`, `count` returns
     //! an unsigned integral, or a Constant thereof, representing the number

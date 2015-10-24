@@ -14,9 +14,9 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
+    //! @ingroup group-algorithms-query
     //! Perform an action on each element of a foldable, discarding
     //! the result each time.
-    //! @relates Foldable
     //!
     //! Iteration is done from left to right, i.e. in the same order as when
     //! using `fold_left`. If the structure is not finite, this method will

@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Zip one sequence or more.
-    //! @relates Sequence
     //!
     //! Given `n` sequences `s1, ..., sn`, `zip_shortest` produces a sequence
     //! whose `i`-th element is a tuple of `(s1[i], ..., sn[i])`, where `sk[i]`

@@ -30,7 +30,6 @@ namespace boost { namespace hana {
 
     //! @ingroup group-algorithms-transformation
     //! Insert a value at a given index in a sequence.
-    //! @relates Sequence
     //!
     //! Given a sequence, an index and an element to insert, `insert` inserts
     //! the element at the given index.

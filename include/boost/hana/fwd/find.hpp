@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-query
     //! Finds the value associated to the given key in a structure.
-    //! @relates Searchable
     //!
     //! Given a `key` and a `Searchable` structure, `find` returns the `just`
     //! the first value whose key is equal to the given `key`, or `nothing` if

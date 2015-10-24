@@ -17,7 +17,6 @@ namespace boost { namespace hana {
     //! @ingroup group-algorithms-summary
     //! Right-fold of a structure using a binary operation and an optional
     //! initial reduction state.
-    //! @relates Foldable
     //!
     //! `fold_right` is a right-associative fold using a binary operation.
     //! Given a structure containing `x1, ..., xn`, a function `f` and

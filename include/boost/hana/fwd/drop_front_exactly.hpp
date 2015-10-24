@@ -16,7 +16,6 @@ Distributed under the Boost Software License, Version 1.0.
 namespace boost { namespace hana {
     //! @ingroup group-algorithms-transformation
     //! Drop the first `n` elements of an iterable, and return the rest.
-    //! @relates Iterable
     //!
     //! Given an `Iterable` `xs` with a linearization of `[x1, x2, ...]` and
     //! a non-negative `IntegralConstant` `n`, `drop_front_exactly(xs, n)` is
