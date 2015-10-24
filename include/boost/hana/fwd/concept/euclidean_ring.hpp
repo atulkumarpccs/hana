@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_EUCLIDEAN_RING_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-arithmetic
     //! The `EuclideanRing` concept represents a commutative `Ring` that
     //! can also be endowed with a division algorithm.
     //!

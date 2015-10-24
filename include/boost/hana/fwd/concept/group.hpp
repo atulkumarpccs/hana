@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_GROUP_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-arithmetic
     //! The `Group` concept represents `Monoid`s where all objects have
     //! an inverse w.r.t. the `Monoid`'s binary operation.
     //!

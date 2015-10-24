@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_SEARCHABLE_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-containers
     //! The `Searchable` concept represents structures that can be searched.
     //!
     //! Intuitively, a `Searchable` is any structure, finite or infinite,

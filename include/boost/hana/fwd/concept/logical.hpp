@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_LOGICAL_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-misc
     //! The `Logical` concept represents types with a truth value.
     //!
     //! Intuitively, a `Logical` is just a `bool`, or something that can act

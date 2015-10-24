@@ -14,7 +14,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-containers
     //! The `Sequence` concept represents generic index-based sequences.
     //!
     //! Compared to other abstract concepts, the Sequence concept is very

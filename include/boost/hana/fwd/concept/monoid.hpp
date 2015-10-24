@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_MONOID_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-arithmetic
     //! The `Monoid` concept represents data types with an associative
     //! binary operation that has an identity.
     //!

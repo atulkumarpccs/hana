@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_INTEGRAL_CONSTANT_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-arithmetic
     //! The `IntegralConstant` concept represents compile-time integral values.
     //!
     //! The `IntegralConstant` concept represents objects that hold a

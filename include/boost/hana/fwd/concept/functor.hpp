@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_FUNCTOR_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-functional
     //! The `Functor` concept represents types that can be mapped over.
     //!
     //! Intuitively, a [Functor][1] is some kind of box that can hold generic

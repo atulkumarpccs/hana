@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_RING_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-arithmetic
     //! The `Ring` concept represents `Group`s that also form a `Monoid`
     //! under a second binary operation that distributes over the first.
     //!

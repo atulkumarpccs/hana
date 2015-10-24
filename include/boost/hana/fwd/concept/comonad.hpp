@@ -17,7 +17,7 @@ namespace boost { namespace hana {
     // on GCC.
 
     /*!
-    @ingroup group-concepts
+    @ingroup group-concepts-functional
     The `Comonad` concept represents context-sensitive computations and
     data.
 

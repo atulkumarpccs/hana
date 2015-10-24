@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_METAFUNCTION_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-misc
     //! A `Metafunction` is a function that takes `hana::type`s as inputs and
     //! returns a `hana::type` as output.
     //!

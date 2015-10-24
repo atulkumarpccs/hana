@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_ORDERABLE_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-misc
     //! The `Orderable` concept represents totally ordered data types.
     //!
     //! Intuitively, `Orderable` objects must define a binary predicate named

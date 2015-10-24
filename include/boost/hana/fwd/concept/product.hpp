@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_PRODUCT_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-misc
     //! Represents types that are generic containers of two elements.
     //!
     //! This concept basically represents types that are like `std::pair`.

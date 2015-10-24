@@ -14,6 +14,24 @@ Distributed under the Boost Software License, Version 1.0.
 //! @defgroup group-concepts Concepts
 //! Concepts provided by the library.
 
+//! @ingroup group-concepts
+//! @defgroup group-concepts-arithmetic Numerical
+//! Concepts related to arithmetic
+
+//! @ingroup group-concepts
+//! @defgroup group-concepts-functional Functional programming
+//! Generally useful concepts borrowed from functional programming
+
+//! @ingroup group-concepts
+//! @defgroup group-concepts-containers Containers
+//! Container-oriented concepts
+
+//! @ingroup group-concepts
+//! @defgroup group-concepts-misc Miscellaneous
+//! Miscellaneous concepts
+
+
+
 //! @defgroup group-datatypes Data types
 //! General purpose data types provided by the library.
 

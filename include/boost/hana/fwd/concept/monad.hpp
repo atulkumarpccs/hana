@@ -11,7 +11,7 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_FWD_CONCEPT_MONAD_HPP
 
 namespace boost { namespace hana {
-    //! @ingroup group-concepts
+    //! @ingroup group-concepts-functional
     //! The `Monad` concept represents `Applicative`s with the ability to
     //! flatten nested levels of structure.
     //!
