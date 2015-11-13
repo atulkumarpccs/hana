@@ -68,14 +68,19 @@ namespace boost { namespace hana {
     struct tuple
         : detail::operators::adl<tuple<Xn...>>
         , detail::iterable_operators<tuple<Xn...>>
+        , hana::basic_tuple<Xn...>
     {
-        basic_tuple<Xn...> storage_;
+        using Storage = hana::basic_tuple<Xn...>;
         using hana_tag = tuple_tag;
+
+        Storage const& storage() const& { return *this; }
+        Storage& storage() & { return *this; }
+        Storage&& storage() && { return static_cast<Storage&&>(*this); }
 
     private:
         template <typename Other, std::size_t ...n>
         explicit constexpr tuple(detail::from_index_sequence_t, std::index_sequence<n...>, Other&& other)
-            : storage_(hana::get_impl<n>(static_cast<Other&&>(other))...)
+            : Storage(hana::get_impl<n>(static_cast<Other&&>(other))...)
         { }
 
     public:
@@ -83,21 +88,21 @@ namespace boost { namespace hana {
             detail::fast_and<BOOST_HANA_TT_IS_CONSTRUCTIBLE(Xn, dummy...)...>::value
         >::type>
         constexpr tuple()
-            : storage_()
+            : Storage()
         { }
 
         template <typename ...dummy, typename = typename std::enable_if<
             detail::fast_and<BOOST_HANA_TT_IS_CONSTRUCTIBLE(Xn, Xn const&, dummy...)...>::value
         >::type>
         constexpr tuple(Xn const& ...xn)
-            : storage_(xn...)
+            : Storage(xn...)
         { }
 
         template <typename ...Yn, typename = typename std::enable_if<
             detail::fast_and<BOOST_HANA_TT_IS_CONSTRUCTIBLE(Xn, Yn&&)...>::value
         >::type>
         constexpr tuple(Yn&& ...yn)
-            : storage_(static_cast<Yn&&>(yn)...)
+            : Storage(static_cast<Yn&&>(yn)...)
         { }
 
         template <typename ...Yn, typename = typename std::enable_if<
@@ -106,7 +111,7 @@ namespace boost { namespace hana {
         constexpr tuple(tuple<Yn...> const& other)
             : tuple(detail::from_index_sequence_t{},
                     std::make_index_sequence<sizeof...(Xn)>{},
-                    other.storage_)
+                    static_cast<typename tuple<Yn...>::Storage const&>(other))
         { }
 
         template <typename ...Yn, typename = typename std::enable_if<
@@ -115,7 +120,7 @@ namespace boost { namespace hana {
         constexpr tuple(tuple<Yn...>&& other)
             : tuple(detail::from_index_sequence_t{},
                     std::make_index_sequence<sizeof...(Xn)>{},
-                    static_cast<tuple<Yn...>&&>(other).storage_)
+                    static_cast<typename tuple<Yn...>::Storage&&>(other))
         { }
 
         // The three following constructors are required to make sure that
@@ -128,7 +133,7 @@ namespace boost { namespace hana {
         constexpr tuple(tuple const& other)
             : tuple(detail::from_index_sequence_t{},
                     std::make_index_sequence<sizeof...(Xn)>{},
-                    other.storage_)
+                    static_cast<typename tuple::Storage const&>(other))
         { }
 
         template <typename ...dummy, typename = typename std::enable_if<
@@ -144,7 +149,7 @@ namespace boost { namespace hana {
         constexpr tuple(tuple&& other)
             : tuple(detail::from_index_sequence_t{},
                     std::make_index_sequence<sizeof...(Xn)>{},
-                    static_cast<tuple&&>(other).storage_)
+                    static_cast<typename tuple::Storage&&>(other))
         { }
 
 
@@ -152,7 +157,8 @@ namespace boost { namespace hana {
             detail::fast_and<BOOST_HANA_TT_IS_ASSIGNABLE(Xn&, Yn const&)...>::value
         >::type>
         constexpr tuple& operator=(tuple<Yn...> const& other) {
-            detail::assign(this->storage_, other.storage_,
+            detail::assign(static_cast<Storage&>(*this),
+                           static_cast<typename tuple<Yn...>::Storage&>(other),
                            std::make_index_sequence<sizeof...(Xn)>{});
             return *this;
         }
@@ -161,7 +167,8 @@ namespace boost { namespace hana {
             detail::fast_and<BOOST_HANA_TT_IS_ASSIGNABLE(Xn&, Yn&&)...>::value
         >::type>
         constexpr tuple& operator=(tuple<Yn...>&& other) {
-            detail::assign(this->storage_, static_cast<tuple<Yn...>&&>(other).storage_,
+            detail::assign(static_cast<Storage&>(*this),
+                           static_cast<typename tuple<Yn...>::Storage&&>(other),
                            std::make_index_sequence<sizeof...(Xn)>{});
             return *this;
         }
@@ -203,7 +210,7 @@ namespace boost { namespace hana {
 
         template <typename Xs, typename F>
         static constexpr decltype(auto) apply(Xs&& xs, F&& f) {
-            return hana::unpack(static_cast<Xs&&>(xs).storage_, static_cast<F&&>(f));
+            return hana::unpack(static_cast<Xs&&>(xs).storage(), static_cast<F&&>(f));
         }
     };
 
@@ -222,7 +229,7 @@ namespace boost { namespace hana {
         template <typename Xs, typename N>
         static constexpr decltype(auto) apply(Xs&& xs, N const&) {
             constexpr std::size_t index = N::value;
-            return hana::get_impl<index>(static_cast<Xs&&>(xs).storage_);
+            return hana::get_impl<index>(static_cast<Xs&&>(xs).storage());
         }
     };
 
@@ -252,17 +259,17 @@ namespace boost { namespace hana {
     // compile-time optimizations (to reduce the # of function instantiations)
     template <std::size_t n, typename ...Xs>
     constexpr decltype(auto) at_c(tuple<Xs...> const& xs) {
-        return hana::get_impl<n>(xs.storage_);
+        return hana::get_impl<n>(static_cast<typename tuple<Xs...>::Storage const&>(xs));
     }
 
     template <std::size_t n, typename ...Xs>
     constexpr decltype(auto) at_c(tuple<Xs...>& xs) {
-        return hana::get_impl<n>(xs.storage_);
+        return hana::get_impl<n>(static_cast<typename tuple<Xs...>::Storage&>(xs));
     }
 
     template <std::size_t n, typename ...Xs>
     constexpr decltype(auto) at_c(tuple<Xs...>&& xs) {
-        return hana::get_impl<n>(static_cast<tuple<Xs...>&&>(xs).storage_);
+        return hana::get_impl<n>(static_cast<typename tuple<Xs...>::Storage&&>(xs));
     }
 
     //////////////////////////////////////////////////////////////////////////

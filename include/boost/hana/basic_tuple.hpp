@@ -99,7 +99,7 @@ namespace boost { namespace hana {
     //////////////////////////////////////////////////////////////////////////
     //! @cond
     template <typename ...Xn>
-    struct basic_tuple final
+    struct basic_tuple
         : detail::basic_tuple_impl<std::make_index_sequence<sizeof...(Xn)>, Xn...>
     {
         using detail::basic_tuple_impl<

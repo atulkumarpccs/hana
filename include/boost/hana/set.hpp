@@ -55,17 +55,21 @@ namespace boost { namespace hana {
     struct set
         : detail::operators::adl<set<Xs...>>
         , detail::searchable_operators<set<Xs...>>
+        , hana::tuple<Xs...>
     {
-        tuple<Xs...> storage;
+        using Storage = hana::tuple<Xs...>;
         using hana_tag = set_tag;
         static constexpr std::size_t size = sizeof...(Xs);
+        Storage const& storage() const& { return *this; }
+        Storage& storage() & { return *this; }
+        Storage&& storage() && { return static_cast<Storage&&>(*this); }
 
-        explicit constexpr set(tuple<Xs...> const& xs)
-            : storage(xs)
+        explicit constexpr set(hana::tuple<Xs...> const& xs)
+            : Storage(xs)
         { }
 
-        explicit constexpr set(tuple<Xs...>&& xs)
-            : storage(static_cast<tuple<Xs...>&&>(xs))
+        explicit constexpr set(hana::tuple<Xs...>&& xs)
+            : Storage(static_cast<hana::tuple<Xs...>&&>(xs))
         { }
     };
     //! @endcond
@@ -118,11 +122,8 @@ namespace boost { namespace hana {
         { return hana::false_c; }
 
         template <typename S1, typename S2>
-        static constexpr decltype(auto) apply(S1&& s1, S2&& s2) {
-            return equal_impl::equal_helper(s1, s2, hana::bool_c<
-                decltype(hana::length(s1.storage))::value ==
-                decltype(hana::length(s2.storage))::value
-            >);
+        static constexpr decltype(auto) apply(S1 const& s1, S2 const& s2) {
+            return equal_impl::equal_helper(s1, s2, hana::bool_c<S1::size == S2::size>);
         }
     };
 
@@ -133,7 +134,7 @@ namespace boost { namespace hana {
     struct unpack_impl<set_tag> {
         template <typename Set, typename F>
         static constexpr decltype(auto) apply(Set&& set, F&& f) {
-            return hana::unpack(static_cast<Set&&>(set).storage,
+            return hana::unpack(static_cast<Set&&>(set).storage(),
                                 static_cast<F&&>(f));
         }
     };
@@ -145,7 +146,8 @@ namespace boost { namespace hana {
     struct find_if_impl<set_tag> {
         template <typename Xs, typename Pred>
         static constexpr auto apply(Xs&& xs, Pred&& pred) {
-            return hana::find_if(static_cast<Xs&&>(xs).storage, static_cast<Pred&&>(pred));
+            return hana::find_if(static_cast<Xs&&>(xs).storage(),
+                                 static_cast<Pred&&>(pred));
         }
     };
 
@@ -165,7 +167,7 @@ namespace boost { namespace hana {
 
         template <typename Xs, typename Pred>
         static constexpr auto apply(Xs const& xs, Pred const& pred) {
-            return hana::unpack(xs.storage, any_of_helper<Pred>{pred});
+            return hana::unpack(xs.storage(), any_of_helper<Pred>{pred});
         }
     };
 
@@ -216,7 +218,7 @@ namespace boost { namespace hana {
         static constexpr auto
         insert_helper(Xs&& xs, X&& x, hana::false_, std::index_sequence<n...>) {
             return hana::make_set(
-                hana::at_c<n>(static_cast<Xs&&>(xs).storage)..., static_cast<X&&>(x)
+                hana::at_c<n>(static_cast<Xs&&>(xs).storage())..., static_cast<X&&>(x)
             );
         }
 
@@ -237,7 +239,7 @@ namespace boost { namespace hana {
         template <typename Xs, typename X>
         static constexpr decltype(auto) apply(Xs&& xs, X&& x) {
             return hana::unpack(
-                hana::remove(static_cast<Xs&&>(xs).storage,
+                hana::remove(static_cast<Xs&&>(xs).storage(),
                              static_cast<X&&>(x)),
                 hana::make_set
             );

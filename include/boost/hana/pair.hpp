@@ -32,13 +32,19 @@ namespace boost { namespace hana {
     //////////////////////////////////////////////////////////////////////////
     //! @cond
     template <typename First, typename Second>
-    struct pair : detail::operators::adl<pair<First, Second>> {
+    struct pair
+        : detail::operators::adl<pair<First, Second>>
+        , hana::basic_tuple<First, Second>
+    {
+        using Storage = hana::basic_tuple<First, Second>;
+        using hana_tag = pair_tag;
+
         template <typename ...dummy, typename = typename std::enable_if<
             BOOST_HANA_TT_IS_CONSTRUCTIBLE(First, dummy...) &&
             BOOST_HANA_TT_IS_CONSTRUCTIBLE(Second, dummy...)
         >::type>
         constexpr pair()
-            : storage_()
+            : Storage()
         { }
 
         template <typename ...dummy, typename = typename std::enable_if<
@@ -46,7 +52,7 @@ namespace boost { namespace hana {
             BOOST_HANA_TT_IS_CONSTRUCTIBLE(Second, Second const&, dummy...)
         >::type>
         constexpr pair(First const& first, Second const& second)
-            : storage_{first, second}
+            : Storage{first, second}
         { }
 
         template <typename T, typename U, typename = typename std::enable_if<
@@ -54,7 +60,7 @@ namespace boost { namespace hana {
             BOOST_HANA_TT_IS_CONVERTIBLE(U&&, Second)
         >::type>
         constexpr pair(T&& t, U&& u)
-            : storage_{static_cast<T&&>(t), static_cast<U&&>(u)}
+            : Storage{static_cast<T&&>(t), static_cast<U&&>(u)}
         { }
 
         template <typename T, typename U, typename = typename std::enable_if<
@@ -62,8 +68,8 @@ namespace boost { namespace hana {
             BOOST_HANA_TT_IS_CONVERTIBLE(U const&, Second)
         >::type>
         constexpr pair(pair<T, U> const& other)
-            : storage_{hana::get_impl<0>(other.storage_),
-                       hana::get_impl<1>(other.storage_)}
+            : Storage{hana::get_impl<0>(other),
+                      hana::get_impl<1>(other)}
         { }
 
         template <typename T, typename U, typename = typename std::enable_if<
@@ -71,8 +77,8 @@ namespace boost { namespace hana {
             BOOST_HANA_TT_IS_CONVERTIBLE(U&&, Second)
         >::type>
         constexpr pair(pair<T, U>&& other)
-            : storage_{static_cast<T&&>(hana::get_impl<0>(other.storage_)),
-                       static_cast<U&&>(hana::get_impl<1>(other.storage_))}
+            : Storage{static_cast<T&&>(hana::get_impl<0>(other)),
+                      static_cast<U&&>(hana::get_impl<1>(other))}
         { }
 
         template <typename T, typename U, typename = typename std::enable_if<
@@ -80,8 +86,8 @@ namespace boost { namespace hana {
             BOOST_HANA_TT_IS_ASSIGNABLE(Second&, U const&)
         >::type>
         constexpr pair& operator=(pair<T, U> const& other) {
-            hana::get_impl<0>(storage_) = hana::get_impl<0>(other.storage_);
-            hana::get_impl<1>(storage_) = hana::get_impl<1>(other.storage_);
+            hana::get_impl<0>(*this) = hana::get_impl<0>(other);
+            hana::get_impl<1>(*this) = hana::get_impl<1>(other);
             return *this;
         }
 
@@ -90,13 +96,10 @@ namespace boost { namespace hana {
             BOOST_HANA_TT_IS_ASSIGNABLE(Second&, U&&)
         >::type>
         constexpr pair& operator=(pair<T, U>&& other) {
-            hana::get_impl<0>(storage_) = static_cast<T&&>(hana::get_impl<0>(other.storage_));
-            hana::get_impl<1>(storage_) = static_cast<U&&>(hana::get_impl<1>(other.storage_));
+            hana::get_impl<0>(*this) = static_cast<T&&>(hana::get_impl<0>(other));
+            hana::get_impl<1>(*this) = static_cast<U&&>(hana::get_impl<1>(other));
             return *this;
         }
-
-        using hana_tag = pair_tag;
-        basic_tuple<First, Second> storage_;
     };
     //! @endcond
 
@@ -132,14 +135,14 @@ namespace boost { namespace hana {
     struct first_impl<pair_tag> {
         template <typename P>
         static constexpr decltype(auto) apply(P&& p)
-        { return hana::get_impl<0>(static_cast<P&&>(p).storage_); }
+        { return hana::get_impl<0>(static_cast<P&&>(p)); }
     };
 
     template <>
     struct second_impl<pair_tag> {
         template <typename P>
         static constexpr decltype(auto) apply(P&& p)
-        { return hana::get_impl<1>(static_cast<P&&>(p).storage_); }
+        { return hana::get_impl<1>(static_cast<P&&>(p)); }
     };
 }} // end namespace boost::hana
 

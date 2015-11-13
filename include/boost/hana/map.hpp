@@ -73,18 +73,24 @@ namespace boost { namespace hana {
     struct map
         : detail::searchable_operators<map<Pairs...>>
         , detail::operators::adl<map<Pairs...>>
+        , private hana::tuple<Pairs...>
     {
-        tuple<Pairs...> storage;
         using hana_tag = map_tag;
         static constexpr std::size_t size = sizeof...(Pairs);
 
-        explicit constexpr map(tuple<Pairs...> const& ps)
-            : storage(ps)
+        explicit constexpr map(hana::tuple<Pairs...> const& ps)
+            : hana::tuple<Pairs...>(ps)
         { }
 
-        explicit constexpr map(tuple<Pairs...>&& ps)
-            : storage(static_cast<tuple<Pairs...>&&>(ps))
+        explicit constexpr map(hana::tuple<Pairs...>&& ps)
+            : hana::tuple<Pairs...>(static_cast<hana::tuple<Pairs...>&&>(ps))
         { }
+
+        hana::tuple<Pairs...> const& storage() const& { return *this; }
+        hana::tuple<Pairs...>& storage() & { return *this; }
+        hana::tuple<Pairs...>&& storage() && {
+            return static_cast<hana::tuple<Pairs...>&&>(*this);
+        }
     };
     //! @endcond
 
@@ -126,7 +132,7 @@ namespace boost { namespace hana {
     struct keys_impl<map_tag> {
         template <typename Map>
         static constexpr decltype(auto) apply(Map&& map) {
-            return hana::transform(static_cast<Map&&>(map).storage, hana::first);
+            return hana::transform(static_cast<Map&&>(map).storage(), hana::first);
         }
     };
 
@@ -136,7 +142,7 @@ namespace boost { namespace hana {
     //! @cond
     template <typename Map>
     constexpr decltype(auto) values_t::operator()(Map&& map) const {
-        return hana::transform(static_cast<Map&&>(map).storage, hana::second);
+        return hana::transform(static_cast<Map&&>(map).storage(), hana::second);
     }
     //! @endcond
 
@@ -155,7 +161,7 @@ namespace boost { namespace hana {
         static constexpr auto
         insert_helper(Xs&& xs, Pair&& pair, hana::false_, std::index_sequence<n...>) {
             return hana::make_map(
-                hana::at_c<n>(static_cast<Xs&&>(xs).storage)..., static_cast<Pair&&>(pair)
+                hana::at_c<n>(static_cast<Xs&&>(xs).storage())..., static_cast<Pair&&>(pair)
             );
         }
 
@@ -179,7 +185,7 @@ namespace boost { namespace hana {
         static constexpr decltype(auto) apply(M&& map, Key&& key) {
             return hana::unpack(
                 hana::remove_if(
-                    static_cast<M&&>(map).storage,
+                    static_cast<M&&>(map).storage(),
                     hana::compose(
                         hana::equal.to(static_cast<Key&&>(key)),
                         hana::first
@@ -211,8 +217,8 @@ namespace boost { namespace hana {
         template <typename M1, typename M2>
         static constexpr auto apply(M1 const& m1, M2 const& m2) {
             return equal_impl::equal_helper(m1, m2, hana::bool_c<
-                decltype(hana::length(m1.storage))::value ==
-                decltype(hana::length(m2.storage))::value
+                decltype(hana::length(m1.storage()))::value ==
+                decltype(hana::length(m2.storage()))::value
             >);
         }
     };
@@ -225,7 +231,7 @@ namespace boost { namespace hana {
         template <typename M, typename Pred>
         static constexpr auto apply(M&& map, Pred&& pred) {
             return hana::transform(
-                hana::find_if(static_cast<M&&>(map).storage,
+                hana::find_if(static_cast<M&&>(map).storage(),
                     hana::compose(static_cast<Pred&&>(pred), hana::first)),
                 hana::second
             );
@@ -266,7 +272,7 @@ namespace boost { namespace hana {
             using Pack = typename detail::make_pack<Xs>::type;
             using Pred = decltype(hana::compose(hana::equal.to(key), hana::first));
             constexpr std::size_t index = detail::index_if<Pred, Pack>::value;
-            return hana::second(hana::at_c<index>(static_cast<Xs&&>(xs).storage));
+            return hana::second(hana::at_c<index>(static_cast<Xs&&>(xs).storage()));
         }
     };
 
@@ -277,7 +283,7 @@ namespace boost { namespace hana {
     struct unpack_impl<map_tag> {
         template <typename M, typename F>
         static constexpr decltype(auto) apply(M&& map, F&& f) {
-            return hana::unpack(static_cast<M&&>(map).storage,
+            return hana::unpack(static_cast<M&&>(map).storage(),
                                 static_cast<F&&>(f));
         }
     };
