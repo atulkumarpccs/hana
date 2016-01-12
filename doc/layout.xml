@@ -9,19 +9,17 @@ Distributed under the Boost Software License, Version 1.0.
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
-    <tab type="modules" visible="yes"
-                        title="Reference documentation"
-                        intro="
+    <tab type="modules"
+         visible="yes"
+         title="Reference documentation"
+         intro="
 The reference documentation is split into logical modules, as documented in
 the user manual."/>
 
-    <tab type="user" visible="yes" url="functions.html" title="Alphabetical index"/>
-    <!-- The intro of "classmembers" controls what appears on the functions.html
-         page, which we're using as our index. So it's basically controlling the
-         intro of our "Index".
-    -->
-    <tab type="classmembers" visible="no" title="" intro="
-Alphabetical index of everything provided in the library."/>
+    <tab type="namespacemembers"
+         visible="$ALPHABETICAL_INDEX"
+         title="Alphabetical Index"
+         intro="Alphabetical index of every algorithm provided by the library."/>
 
     <tab type="filelist" visible="yes" title="Headers" intro="
 This is a list of all the headers provided by the library."/>
@@ -29,11 +27,7 @@ This is a list of all the headers provided by the library."/>
     <tab type="pages" visible="yes" title="" intro=""/>
 
     <!-- We don't use what's below -->
-    <tab type="namespaces" visible="no" title="">
-      <tab type="namespacelist" visible="no" title="" intro=""/>
-      <tab type="namespacemembers" visible="no" title="" intro=""/>
-    </tab>
-
+    <tab type="classmembers" visible="no" title="" intro=""/>
     <tab type="examples" visible="no" title="" intro=""/>
 
     <tab type="classes" visible="no" title="">
