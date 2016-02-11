@@ -21,7 +21,7 @@ Distributed under the Boost Software License, Version 1.0.
 BOOST_HANA_NAMESPACE_BEGIN
     //! @cond
     template <typename Cond, typename Then, typename Else>
-    constexpr decltype(auto) if_t::operator()(Cond&& cond, Then&& then_, Else&& else_) const {
+    constexpr decltype(auto) if_t::operator()(Cond const& cond, Then&& then, Else&& else_) const {
         using Bool = typename hana::tag_of<Cond>::type;
         using If = BOOST_HANA_DISPATCH_IF(if_impl<Bool>,
             hana::Logical<Bool>::value
@@ -32,8 +32,8 @@ BOOST_HANA_NAMESPACE_BEGIN
         "hana::if_(cond, then, else) requires 'cond' to be a Logical");
     #endif
 
-        return If::apply(static_cast<Cond&&>(cond),
-                         static_cast<Then&&>(then_),
+        return If::apply(cond,
+                         static_cast<Then&&>(then),
                          static_cast<Else&&>(else_));
     }
     //! @endcond
@@ -49,8 +49,8 @@ BOOST_HANA_NAMESPACE_BEGIN
     template <typename L, bool condition>
     struct if_impl<L, when<condition>> : default_ {
         template <typename C, typename T, typename E>
-        static constexpr auto apply(C&& c, T&& t, E&& e) {
-            return hana::eval_if(static_cast<C&&>(c),
+        static constexpr decltype(auto) apply(C const& c, T&& t, E&& e) {
+            return hana::eval_if(c,
                 detail::hold<T&&>{static_cast<T&&>(t)},
                 detail::hold<E&&>{static_cast<E&&>(e)}
             );

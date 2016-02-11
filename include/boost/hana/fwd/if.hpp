@@ -38,7 +38,7 @@ BOOST_HANA_NAMESPACE_BEGIN
     //! -------
     //! @include example/if.cpp
 #ifdef BOOST_HANA_DOXYGEN_INVOKED
-    constexpr auto if_ = [](auto&& cond, auto&& then, auto&& else_) -> decltype(auto) {
+    constexpr auto if_ = [](auto const& cond, auto&& then, auto&& else_) -> decltype(auto) {
         return tag-dispatched;
     };
 #else
@@ -47,7 +47,7 @@ BOOST_HANA_NAMESPACE_BEGIN
 
     struct if_t {
         template <typename Cond, typename Then, typename Else>
-        constexpr decltype(auto) operator()(Cond&& cond, Then&& then, Else&& else_) const;
+        constexpr decltype(auto) operator()(Cond const& cond, Then&& then, Else&& else_) const;
     };
 
     constexpr if_t if_{};
