@@ -36,6 +36,7 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/fold_left.hpp>
 #include <boost/hana/functional/demux.hpp>
 #include <boost/hana/functional/on.hpp>
+#include <boost/hana/basic_tuple.hpp>
 #include <boost/hana/functional/partial.hpp>
 #include <boost/hana/fwd/any_of.hpp>
 #include <boost/hana/fwd/at_key.hpp>
@@ -101,7 +102,7 @@ BOOST_HANA_NAMESPACE_BEGIN
         template <typename Storage>
         struct KeyAtIndex {
             template <std::size_t i>
-            using apply = decltype(hana::first(hana::at_c<i>(std::declval<Storage>())));
+            using apply = decltype(hana::get_impl<i>(std::declval<Storage>()));
         };
     }
 
@@ -146,6 +147,18 @@ BOOST_HANA_NAMESPACE_BEGIN
             );
         }
     };
+
+    template <typename ...Pairs>
+    constexpr auto quick_make_map(Pairs&& ...pairs) {
+        using Storage = hana::basic_tuple<typename detail::decay<Pairs>::type...>;
+        using HashTable = typename detail::make_hash_table_all_perfect_hashes<
+            detail::KeyAtIndex<Storage>::template apply, sizeof...(Pairs)
+        >::type;
+
+        return map<HashTable, Storage>(
+            hana::make_basic_tuple(static_cast<Pairs&&>(pairs)...)
+        );
+    }
 
     //////////////////////////////////////////////////////////////////////////
     // keys
@@ -353,7 +366,7 @@ BOOST_HANA_NAMESPACE_BEGIN
                 HashTable, Key, detail::KeyAtIndex<Storage>::template apply
             >::type;
             constexpr std::size_t index = decltype(*MaybeIndex{}){}();
-            return hana::second(hana::at_c<index>(static_cast<Map&&>(map).storage));
+            return hana::second(hana::get_impl<index>(static_cast<Map&&>(map).storage));
         }
     };
 

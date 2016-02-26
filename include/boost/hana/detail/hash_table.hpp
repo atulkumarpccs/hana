@@ -143,6 +143,27 @@ BOOST_HANA_NAMESPACE_BEGIN namespace detail {
             hana::metafunction<do_insert>
         ))::type;
     };
+
+    // make_hash_table_all_perfect_hashes:
+    //  Creates a `hash_table` type for keys that are all distinct and for
+    //  which the hash is perfect. In other words, we can assume that we have
+    //  no collisions, which allows us to provide a dramatical speedup.
+    template <template <std::size_t> class KeyAtIndex, typename Indices>
+    struct make_quick_hash_table;
+
+    template <template <std::size_t> class KeyAtIndex, std::size_t ...i>
+    struct make_quick_hash_table<KeyAtIndex, std::index_sequence<i...>> {
+        using type = hash_table<
+            bucket<KeyAtIndex<i>, i>...
+        >;
+    };
+    template <template <std::size_t> class KeyAtIndex, std::size_t N>
+    struct make_hash_table_all_perfect_hashes {
+        using type = typename make_quick_hash_table<
+            KeyAtIndex,
+            std::make_index_sequence<N>
+        >::type;
+    };
 } BOOST_HANA_NAMESPACE_END
 
 #endif // !BOOST_HANA_DETAIL_HASH_TABLE_HPP
