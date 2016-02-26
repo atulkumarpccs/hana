@@ -168,6 +168,15 @@ BOOST_HANA_NAMESPACE_BEGIN
             >::type;
             using type = detail::map_impl<HashTable, Storage>;
         };
+
+        template <typename ...Pairs>
+        struct make_quick_map_type {
+            using Storage = hana::basic_tuple<Pairs...>;
+            using HashTable = typename detail::make_hash_table_all_perfect_hashes<
+                detail::KeyAtIndex<Storage>::template apply, sizeof...(Pairs)
+            >::type;
+            using type = detail::map_impl<HashTable, Storage>;
+        };
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -208,6 +217,17 @@ BOOST_HANA_NAMESPACE_BEGIN
             return Map{hana::make_basic_tuple(static_cast<Pairs&&>(pairs)...)};
         }
     };
+
+    template <typename ...Pairs>
+    constexpr auto quick_make_map(Pairs&& ...pairs) {
+        using Storage = hana::basic_tuple<typename detail::decay<Pairs>::type...>;
+        using HashTable = typename detail::make_hash_table_all_perfect_hashes<
+            detail::KeyAtIndex<Storage>::template apply, sizeof...(Pairs)
+        >::type;
+
+        using Map = typename detail::make_quick_map_type<typename detail::decay<Pairs>::type...>::type;
+        return Map{hana::make_basic_tuple(static_cast<Pairs&&>(pairs)...)};
+    }
 
     //////////////////////////////////////////////////////////////////////////
     // keys
