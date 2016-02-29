@@ -17,6 +17,7 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/detail/intrinsics.hpp>
 #include <boost/hana/fwd/at.hpp>
 #include <boost/hana/fwd/bool.hpp>
+#include <boost/hana/fwd/concept/sequence.hpp>
 #include <boost/hana/fwd/core/make.hpp>
 #include <boost/hana/fwd/core/tag_of.hpp>
 #include <boost/hana/fwd/drop_front.hpp>
@@ -25,7 +26,6 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/fwd/unpack.hpp>
 
 #if 0 //! @todo Until we strip down headers, this includes too much
-#include <boost/hana/fwd/concept/sequence.hpp>
 #include <boost/hana/fwd/integral_constant.hpp>
 #include <boost/hana/fwd/length.hpp>
 #endif
@@ -168,21 +168,6 @@ BOOST_HANA_NAMESPACE_BEGIN
         using type = basic_tuple_tag;
     };
 
-
-    //////////////////////////////////////////////////////////////////////////
-    // make<basic_tuple_tag>
-    //////////////////////////////////////////////////////////////////////////
-    template <>
-    struct make_impl<basic_tuple_tag> {
-        template <typename ...Xn>
-        static constexpr basic_tuple<typename detail::decay<Xn>::type...>
-        apply(Xn&& ...xn) {
-            return basic_tuple<typename detail::decay<Xn>::type...>{
-                static_cast<Xn&&>(xn)...
-            };
-        }
-    };
-
     //////////////////////////////////////////////////////////////////////////
     // Foldable
     //////////////////////////////////////////////////////////////////////////
@@ -278,6 +263,25 @@ BOOST_HANA_NAMESPACE_BEGIN
         { return hana::bool_c<sizeof...(Xs) == 0>; }
     };
 
+    //////////////////////////////////////////////////////////////////////////
+    // Sequence
+    //////////////////////////////////////////////////////////////////////////
+    template <>
+    struct Sequence<basic_tuple_tag> {
+        static constexpr bool value = true;
+    };
+
+    template <>
+    struct make_impl<basic_tuple_tag> {
+        template <typename ...Xn>
+        static constexpr basic_tuple<typename detail::decay<Xn>::type...>
+        apply(Xn&& ...xn) {
+            return basic_tuple<typename detail::decay<Xn>::type...>{
+                static_cast<Xn&&>(xn)...
+            };
+        }
+    };
+
 #if 0
     //////////////////////////////////////////////////////////////////////////
     // length
@@ -288,14 +292,6 @@ BOOST_HANA_NAMESPACE_BEGIN
         static constexpr auto apply(basic_tuple<Xn...> const&) {
             return hana::size_c<sizeof...(Xn)>;
         }
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // Sequence
-    //////////////////////////////////////////////////////////////////////////
-    template <>
-    struct Sequence<basic_tuple_tag> {
-        static constexpr bool value = true;
     };
 #endif
 BOOST_HANA_NAMESPACE_END
