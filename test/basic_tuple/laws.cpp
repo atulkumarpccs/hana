@@ -6,7 +6,9 @@
 #include "_comparable.hpp"
 
 #include <laws/base.hpp>
+#include <laws/foldable.hpp>
 #include <laws/functor.hpp>
+#include <laws/iterable.hpp>
 namespace hana = boost::hana;
 using hana::test::ct_eq;
 
@@ -29,4 +31,6 @@ int main() {
     );
 
     hana::test::TestFunctor<hana::basic_tuple_tag>{eq_tuples, eq_values};
+    hana::test::TestFoldable<hana::basic_tuple_tag>{eq_tuples};
+    hana::test::TestIterable<hana::basic_tuple_tag>{eq_tuples};
 }

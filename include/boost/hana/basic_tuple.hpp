@@ -15,17 +15,18 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/config.hpp>
 #include <boost/hana/detail/decay.hpp>
 #include <boost/hana/detail/intrinsics.hpp>
+#include <boost/hana/fwd/at.hpp>
+#include <boost/hana/fwd/bool.hpp>
 #include <boost/hana/fwd/core/make.hpp>
 #include <boost/hana/fwd/core/tag_of.hpp>
+#include <boost/hana/fwd/drop_front.hpp>
+#include <boost/hana/fwd/is_empty.hpp>
 #include <boost/hana/fwd/transform.hpp>
 #include <boost/hana/fwd/unpack.hpp>
 
 #if 0 //! @todo Until we strip down headers, this includes too much
-#include <boost/hana/fwd/at.hpp>
-#include <boost/hana/fwd/bool.hpp>
 #include <boost/hana/fwd/concept/sequence.hpp>
 #include <boost/hana/fwd/integral_constant.hpp>
-#include <boost/hana/fwd/is_empty.hpp>
 #include <boost/hana/fwd/length.hpp>
 #endif
 
@@ -119,6 +120,8 @@ BOOST_HANA_NAMESPACE_BEGIN
         struct basic_tuple_impl<std::index_sequence<n...>, Xn...>
             : detail::elt<n, Xn>...
         {
+            static constexpr std::size_t size_ = sizeof...(Xn);
+
             constexpr basic_tuple_impl() = default;
 
             template <typename Other>
@@ -181,7 +184,7 @@ BOOST_HANA_NAMESPACE_BEGIN
     };
 
     //////////////////////////////////////////////////////////////////////////
-    // unpack
+    // Foldable
     //////////////////////////////////////////////////////////////////////////
     template <>
     struct unpack_impl<basic_tuple_tag> {
@@ -211,7 +214,7 @@ BOOST_HANA_NAMESPACE_BEGIN
     };
 
     //////////////////////////////////////////////////////////////////////////
-    // transform
+    // Functor
     //////////////////////////////////////////////////////////////////////////
     template <>
     struct transform_impl<basic_tuple_tag> {
@@ -240,6 +243,41 @@ BOOST_HANA_NAMESPACE_BEGIN
         }
     };
 
+    //////////////////////////////////////////////////////////////////////////
+    // Iterable
+    //////////////////////////////////////////////////////////////////////////
+    template <>
+    struct at_impl<basic_tuple_tag> {
+        template <typename Xs, typename N>
+        static constexpr decltype(auto) apply(Xs&& xs, N const&) {
+            constexpr std::size_t index = N::value;
+            return hana::get_impl<index>(static_cast<Xs&&>(xs));
+        }
+    };
+
+    template <>
+    struct drop_front_impl<basic_tuple_tag> {
+        template <std::size_t N, typename Xs, std::size_t ...i>
+        static constexpr auto drop_front_helper(Xs&& xs, std::index_sequence<i...>) {
+            return hana::make_basic_tuple(hana::get_impl<i+N>(static_cast<Xs&&>(xs))...);
+        }
+
+        template <typename Xs, typename N>
+        static constexpr auto apply(Xs&& xs, N const&) {
+            constexpr std::size_t len = detail::decay<Xs>::type::size_;
+            return drop_front_helper<N::value>(static_cast<Xs&&>(xs), std::make_index_sequence<
+                N::value < len ? len - N::value : 0
+            >{});
+        }
+    };
+
+    template <>
+    struct is_empty_impl<basic_tuple_tag> {
+        template <typename ...Xs>
+        static constexpr auto apply(basic_tuple<Xs...> const&)
+        { return hana::bool_c<sizeof...(Xs) == 0>; }
+    };
+
 #if 0
     //////////////////////////////////////////////////////////////////////////
     // length
@@ -258,46 +296,6 @@ BOOST_HANA_NAMESPACE_BEGIN
     template <>
     struct Sequence<basic_tuple_tag> {
         static constexpr bool value = true;
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // at
-    //////////////////////////////////////////////////////////////////////////
-    template <>
-    struct at_impl<basic_tuple_tag> {
-        template <typename Xs, typename N>
-        static constexpr decltype(auto) apply(Xs&& xs, N const&) {
-            constexpr std::size_t index = N::value;
-            return hana::get_impl<index>(static_cast<Xs&&>(xs));
-        }
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // tail
-    //////////////////////////////////////////////////////////////////////////
-    template <>
-    struct tail_impl<basic_tuple_tag> {
-        template <typename Xs, std::size_t ...i>
-        static constexpr auto tail_helper(Xs&& xs, std::index_sequence<0, i...>) {
-            return hana::make_basic_tuple(hana::get_impl<i>(static_cast<Xs&&>(xs))...);
-        }
-
-        template <typename Xs>
-        static constexpr auto apply(Xs&& xs) {
-            constexpr std::size_t N = decltype(hana::length(xs))::value;
-            return tail_helper(static_cast<Xs&&>(xs),
-                               std::make_index_sequence<N>{});
-        }
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // is_empty
-    //////////////////////////////////////////////////////////////////////////
-    template <>
-    struct is_empty_impl<basic_tuple_tag> {
-        template <typename ...Xs>
-        static constexpr auto apply(basic_tuple<Xs...> const&)
-        { return hana::bool_c<sizeof...(Xs) == 0>; }
     };
 #endif
 BOOST_HANA_NAMESPACE_END
