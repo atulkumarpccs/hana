@@ -3,7 +3,6 @@
 // (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 #include <boost/hana/basic_tuple.hpp>
-#include "_comparable.hpp"
 
 #include <laws/base.hpp>
 #include <laws/foldable.hpp>
