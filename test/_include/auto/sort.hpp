@@ -49,6 +49,48 @@ TestCase test_sort{[]{
             hana::sort(MAKE_TUPLE(ct_ord<1>{}, ct_ord<0>{}, ct_ord<-4>{}, ct_ord<2>{})),
             MAKE_TUPLE(ct_ord<-4>{}, ct_ord<0>{}, ct_ord<1>{}, ct_ord<2>{})
         ));
+
+        // Check near the boundary of the fast tracking
+        BOOST_HANA_CONSTANT_CHECK(hana::equal(
+            hana::sort(MAKE_TUPLE(
+                ct_ord<8>{},  ct_ord<9>{}, ct_ord<3>{},  ct_ord<5>{},  ct_ord<13>{},
+                ct_ord<15>{}, ct_ord<1>{}, ct_ord<7>{},  ct_ord<2>{},  ct_ord<11>{},
+                ct_ord<6>{},  ct_ord<4>{}, ct_ord<10>{}, ct_ord<12>{}, ct_ord<14>{}
+            )),
+            MAKE_TUPLE(
+                ct_ord<1>{},  ct_ord<2>{},  ct_ord<3>{},  ct_ord<4>{},  ct_ord<5>{},
+                ct_ord<6>{},  ct_ord<7>{},  ct_ord<8>{},  ct_ord<9>{},  ct_ord<10>{},
+                ct_ord<11>{}, ct_ord<12>{}, ct_ord<13>{}, ct_ord<14>{}, ct_ord<15>{}
+            )
+        ));
+        BOOST_HANA_CONSTANT_CHECK(hana::equal(
+            hana::sort(MAKE_TUPLE(
+                ct_ord<8>{},  ct_ord<9>{},  ct_ord<3>{},  ct_ord<5>{},  ct_ord<13>{},
+                ct_ord<15>{}, ct_ord<1>{},  ct_ord<7>{},  ct_ord<2>{},  ct_ord<11>{},
+                ct_ord<6>{},  ct_ord<16>{}, ct_ord<10>{}, ct_ord<12>{}, ct_ord<14>{},
+                ct_ord<4>{}
+            )),
+            MAKE_TUPLE(
+                ct_ord<1>{},  ct_ord<2>{},  ct_ord<3>{},  ct_ord<4>{},  ct_ord<5>{},
+                ct_ord<6>{},  ct_ord<7>{},  ct_ord<8>{},  ct_ord<9>{},  ct_ord<10>{},
+                ct_ord<11>{}, ct_ord<12>{}, ct_ord<13>{}, ct_ord<14>{}, ct_ord<15>{},
+                ct_ord<16>{}
+            )
+        ));
+        BOOST_HANA_CONSTANT_CHECK(hana::equal(
+            hana::sort(MAKE_TUPLE(
+                ct_ord<8>{},  ct_ord<9>{}, ct_ord<3>{},  ct_ord<5>{},  ct_ord<13>{},
+                ct_ord<15>{}, ct_ord<1>{}, ct_ord<7>{},  ct_ord<17>{}, ct_ord<2>{},
+                ct_ord<11>{}, ct_ord<6>{}, ct_ord<16>{}, ct_ord<10>{}, ct_ord<12>{},
+                ct_ord<14>{}, ct_ord<4>{}
+            )),
+            MAKE_TUPLE(
+                ct_ord<1>{},  ct_ord<2>{},  ct_ord<3>{},  ct_ord<4>{},  ct_ord<5>{},
+                ct_ord<6>{},  ct_ord<7>{},  ct_ord<8>{},  ct_ord<9>{},  ct_ord<10>{},
+                ct_ord<11>{}, ct_ord<12>{}, ct_ord<13>{}, ct_ord<14>{}, ct_ord<15>{},
+                ct_ord<16>{}, ct_ord<17>{}
+            )
+        ));
     }
 
     // Test with a custom predicate
@@ -104,6 +146,22 @@ TestCase test_sort{[]{
         BOOST_HANA_CONSTANT_CHECK(hana::equal(
             hana::sort(MAKE_TUPLE(a(ct_ord<1>{}), a(ct_ord<3>{}), b(ct_ord<1>{}), a(ct_ord<2>{}), b(ct_ord<3>{})), pred),
             MAKE_TUPLE(a(ct_ord<1>{}), b(ct_ord<1>{}), a(ct_ord<2>{}), a(ct_ord<3>{}), b(ct_ord<3>{}))
+        ));
+
+        // Check stability across the fast-tracking border
+        BOOST_HANA_CONSTANT_CHECK(hana::equal(
+            hana::sort(MAKE_TUPLE(
+                a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<1>{}), a(ct_eq<0>{}),
+                a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}),
+                a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}),
+                a(ct_eq<4>{}), b(ct_eq<4>{}), b(ct_eq<0>{}), b(ct_eq<1>{}), b(ct_eq<0>{})
+            ), pred),
+            MAKE_TUPLE(
+                a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}),
+                a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}),
+                a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), a(ct_eq<0>{}), b(ct_eq<0>{}),
+                b(ct_eq<0>{}), a(ct_eq<1>{}), b(ct_eq<1>{}), a(ct_eq<4>{}), b(ct_eq<4>{})
+            )
         ));
     }
 }};
