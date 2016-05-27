@@ -17,10 +17,12 @@ Distributed under the Boost Software License, Version 1.0.
 #include <boost/hana/config.hpp>
 #include <boost/hana/core/dispatch.hpp>
 #include <boost/hana/core/make.hpp>
+#include <boost/hana/detail/canonicalize_foldable.hpp>
 #include <boost/hana/detail/nested_by.hpp> // required by fwd decl
 #include <boost/hana/length.hpp>
 #include <boost/hana/less.hpp>
 
+#include <type_traits>
 #include <utility> // std::declval, std::index_sequence
 
 
@@ -59,74 +61,80 @@ BOOST_HANA_NAMESPACE_BEGIN
     //! @endcond
 
     namespace detail {
-        template <typename Xs, typename Pred>
+        template <typename Pred>
         struct sort_predicate {
-            template <std::size_t I, std::size_t J>
+            template <typename T, typename U>
             using apply = decltype(std::declval<Pred>()(
-                hana::at_c<I>(std::declval<Xs>()),
-                hana::at_c<J>(std::declval<Xs>())
+                std::declval<typename T::type>(),
+                std::declval<typename U::type>()
             ));
         };
 
-        template <typename Pred, std::size_t Insert, bool IsInsertionPoint,
+        template <typename ...>
+        struct list { };
+
+        template <std::size_t i, typename T>
+        struct pair { using type = T; };
+
+        template <typename Pred, typename Insert, bool IsInsertionPoint,
                   typename Left,
-                  std::size_t ...Right>
+                  typename ...Right>
         struct insert;
 
         // We did not find the insertion point; continue processing elements
         // recursively.
         template <
-            typename Pred, std::size_t Insert,
-            std::size_t ...Left,
-            std::size_t Right1, std::size_t Right2, std::size_t ...Right
+            typename Pred, typename Insert,
+            typename ...Left,
+            typename Right1, typename Right2, typename ...Right
         >
         struct insert<Pred, Insert, false,
-                      std::index_sequence<Left...>,
+                      list<Left...>,
                       Right1, Right2, Right...
         > {
             using type = typename insert<
                 Pred, Insert, (bool)Pred::template apply<Insert, Right2>::value,
-                std::index_sequence<Left..., Right1>,
+                list<Left..., Right1>,
                 Right2, Right...
             >::type;
         };
 
         // We did not find the insertion point, but there is only one element
         // left. We insert at the end of the list, and we're done.
-        template <typename Pred, std::size_t Insert, std::size_t ...Left, std::size_t Last>
-        struct insert<Pred, Insert, false, std::index_sequence<Left...>, Last> {
-            using type = std::index_sequence<Left..., Last, Insert>;
+        template <typename Pred, typename Insert, typename ...Left, typename Last>
+        struct insert<Pred, Insert, false, list<Left...>, Last> {
+            using type = list<Left..., Last, Insert>;
         };
 
         // We found the insertion point, we're done.
-        template <typename Pred, std::size_t Insert, std::size_t ...Left, std::size_t ...Right>
-        struct insert<Pred, Insert, true, std::index_sequence<Left...>, Right...> {
-            using type = std::index_sequence<Left..., Insert, Right...>;
+        template <typename Pred, typename Insert, typename ...Left, typename ...Right>
+        struct insert<Pred, Insert, true, list<Left...>, Right...> {
+            using type = list<Left..., Insert, Right...>;
         };
 
 
-        template <typename Pred, typename Result, std::size_t ...T>
+        template <typename Pred, typename Result, typename ...T>
         struct insertion_sort_impl;
 
         template <typename Pred,
-                  std::size_t Result1, std::size_t ...Result,
-                  std::size_t T, std::size_t ...Ts>
-        struct insertion_sort_impl<Pred, std::index_sequence<Result1, Result...>, T, Ts...> {
+                  typename Result1, typename ...Result,
+                  typename T, typename ...Ts>
+        struct insertion_sort_impl<Pred, list<Result1, Result...>, T, Ts...> {
             using type = typename insertion_sort_impl<
                 Pred,
                 typename insert<
                     Pred, T, (bool)Pred::template apply<T, Result1>::value,
-                    std::index_sequence<>,
+                    list<>,
                     Result1, Result...
                 >::type,
                 Ts...
             >::type;
         };
 
-        template <typename Pred, std::size_t T, std::size_t ...Ts>
-        struct insertion_sort_impl<Pred, std::index_sequence<>, T, Ts...> {
+        template <typename Pred, typename T, typename ...Ts>
+        struct insertion_sort_impl<Pred, list<>, T, Ts...> {
             using type = typename insertion_sort_impl<
-                Pred, std::index_sequence<T>, Ts...
+                Pred, list<T>, Ts...
             >::type;
         };
 
@@ -135,29 +143,33 @@ BOOST_HANA_NAMESPACE_BEGIN
             using type = Result;
         };
 
-        template <typename Pred, typename Indices>
+        template <typename Pred, typename Tuple, typename Indices>
         struct sort_helper;
 
-        template <typename Pred, std::size_t ...i>
-        struct sort_helper<Pred, std::index_sequence<i...>> {
+        template <typename Pred, typename ...T, std::size_t ...i>
+        struct sort_helper<Pred, hana::tuple<T...>, std::index_sequence<i...>> {
             using type = typename insertion_sort_impl<
-                Pred, std::index_sequence<>, i...
+                Pred, list<>, pair<i, T>...
             >::type;
         };
     } // end namespace detail
 
     template <typename S, bool condition>
     struct sort_impl<S, when<condition>> : default_ {
-        template <typename Xs, std::size_t ...i>
-        static constexpr auto apply_impl(Xs&& xs, std::index_sequence<i...>) {
+        template <typename Xs, std::size_t ...i, typename ...T>
+        static constexpr auto apply_impl(Xs&& xs, detail::list<detail::pair<i, T>...>) {
             return hana::make<S>(hana::at_c<i>(static_cast<Xs&&>(xs))...);
         }
 
         template <typename Xs, typename Pred>
         static constexpr auto apply(Xs&& xs, Pred const&) {
             constexpr std::size_t Len = decltype(hana::length(xs))::value;
+            using Raw = typename std::remove_cv<
+                typename std::remove_reference<Xs>::type
+            >::type;
             using Indices = typename detail::sort_helper<
-                detail::sort_predicate<Xs&&, Pred>,
+                detail::sort_predicate<Pred>,
+                typename detail::canonicalize_foldable<Raw>::type,
                 std::make_index_sequence<Len>
             >::type;
 
