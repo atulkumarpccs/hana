@@ -64,10 +64,12 @@ BOOST_HANA_NAMESPACE_BEGIN
         template <typename Pred>
         struct sort_predicate {
             template <typename T, typename U>
-            using apply = decltype(std::declval<Pred>()(
-                std::declval<typename T::type>(),
-                std::declval<typename U::type>()
-            ));
+            using apply = std::integral_constant<bool,
+                static_cast<bool>(decltype(std::declval<Pred>()(
+                    std::declval<typename T::type>(),
+                    std::declval<typename U::type>()
+                ))::value)
+            >;
         };
 
         template <typename ...>
@@ -76,81 +78,82 @@ BOOST_HANA_NAMESPACE_BEGIN
         template <std::size_t i, typename T>
         struct pair { using type = T; };
 
-        template <typename Pred, typename Insert, bool IsInsertionPoint,
-                  typename Left,
-                  typename ...Right>
-        struct insert;
+        template <template <typename ...> class Pred>
+        struct sorter {
+            template <typename Insert, bool IsInsertionPoint,
+                      typename Left,
+                      typename ...Right>
+            struct insert;
 
-        // We did not find the insertion point; continue processing elements
-        // recursively.
-        template <
-            typename Pred, typename Insert,
-            typename ...Left,
-            typename Right1, typename Right2, typename ...Right
-        >
-        struct insert<Pred, Insert, false,
-                      list<Left...>,
-                      Right1, Right2, Right...
-        > {
-            using type = typename insert<
-                Pred, Insert, (bool)Pred::template apply<Insert, Right2>::value,
-                list<Left..., Right1>,
-                Right2, Right...
-            >::type;
-        };
+            // We did not find the insertion point; continue processing elements
+            // recursively.
+            template <
+                typename Insert,
+                typename ...Left,
+                typename Right1, typename Right2, typename ...Right
+            >
+            struct insert<Insert, false,
+                          list<Left...>,
+                          Right1, Right2, Right...
+            > {
+                using type = typename insert<
+                    Insert, Pred<Insert, Right2>::value,
+                    list<Left..., Right1>,
+                    Right2, Right...
+                >::type;
+            };
 
-        // We did not find the insertion point, but there is only one element
-        // left. We insert at the end of the list, and we're done.
-        template <typename Pred, typename Insert, typename ...Left, typename Last>
-        struct insert<Pred, Insert, false, list<Left...>, Last> {
-            using type = list<Left..., Last, Insert>;
-        };
+            // We did not find the insertion point, but there is only one element
+            // left. We insert at the end of the list, and we're done.
+            template <typename Insert, typename ...Left, typename Last>
+            struct insert<Insert, false, list<Left...>, Last> {
+                using type = list<Left..., Last, Insert>;
+            };
 
-        // We found the insertion point, we're done.
-        template <typename Pred, typename Insert, typename ...Left, typename ...Right>
-        struct insert<Pred, Insert, true, list<Left...>, Right...> {
-            using type = list<Left..., Insert, Right...>;
-        };
+            // We found the insertion point, we're done.
+            template <typename Insert, typename ...Left, typename ...Right>
+            struct insert<Insert, true, list<Left...>, Right...> {
+                using type = list<Left..., Insert, Right...>;
+            };
 
 
-        template <typename Pred, typename Result, typename ...T>
-        struct insertion_sort_impl;
+            template <typename Result, typename ...T>
+            struct insertion_sort_impl;
 
-        template <typename Pred,
-                  typename Result1, typename ...Result,
-                  typename T, typename ...Ts>
-        struct insertion_sort_impl<Pred, list<Result1, Result...>, T, Ts...> {
-            using type = typename insertion_sort_impl<
-                Pred,
-                typename insert<
-                    Pred, T, (bool)Pred::template apply<T, Result1>::value,
-                    list<>,
-                    Result1, Result...
-                >::type,
-                Ts...
-            >::type;
-        };
+            template <typename Result1, typename ...Result,
+                      typename T, typename ...Ts>
+            struct insertion_sort_impl<list<Result1, Result...>, T, Ts...> {
+                using type = typename insertion_sort_impl<
+                    typename insert<
+                        T, Pred<T, Result1>::value,
+                        list<>,
+                        Result1, Result...
+                    >::type,
+                    Ts...
+                >::type;
+            };
 
-        template <typename Pred, typename T, typename ...Ts>
-        struct insertion_sort_impl<Pred, list<>, T, Ts...> {
-            using type = typename insertion_sort_impl<
-                Pred, list<T>, Ts...
-            >::type;
-        };
+            template <typename T, typename ...Ts>
+            struct insertion_sort_impl<list<>, T, Ts...> {
+                using type = typename insertion_sort_impl<
+                    list<T>, Ts...
+                >::type;
+            };
 
-        template <typename Pred, typename Result>
-        struct insertion_sort_impl<Pred, Result> {
-            using type = Result;
-        };
+            template <typename Result>
+            struct insertion_sort_impl<Result> {
+                using type = Result;
+            };
 
-        template <typename Pred, typename Tuple, typename Indices>
-        struct sort_helper;
+            template <typename Tuple, typename Indices>
+            struct sort_helper;
 
-        template <typename Pred, typename ...T, std::size_t ...i>
-        struct sort_helper<Pred, hana::tuple<T...>, std::index_sequence<i...>> {
-            using type = typename insertion_sort_impl<
-                Pred, list<>, pair<i, T>...
-            >::type;
+            template <typename ...T, std::size_t ...i>
+            struct sort_helper<hana::tuple<T...>, std::index_sequence<i...>> {
+                using type = typename insertion_sort_impl<
+                    list<>, pair<i, T>...
+                >::type;
+            };
         };
     } // end namespace detail
 
@@ -167,8 +170,8 @@ BOOST_HANA_NAMESPACE_BEGIN
             using Raw = typename std::remove_cv<
                 typename std::remove_reference<Xs>::type
             >::type;
-            using Indices = typename detail::sort_helper<
-                detail::sort_predicate<Pred>,
+            using Sorter = detail::sorter<detail::sort_predicate<Pred>::template apply>;
+            using Indices = typename Sorter::template sort_helper<
                 typename detail::canonicalize_foldable<Raw>::type,
                 std::make_index_sequence<Len>
             >::type;
