@@ -4,6 +4,7 @@
 
 #include <boost/hana/fold_left.hpp>
 #include <boost/hana/tuple.hpp>
+namespace hana = boost::hana;
 
 
 struct f {
@@ -17,9 +18,11 @@ template <int i>
 struct x { };
 
 int main() {
-    constexpr auto tuple = boost::hana::make_tuple(
-        <%= (1..input_size).map { |n| "x<#{n}>{}" }.join(', ') %>
+    constexpr auto tuple = hana::make_tuple(
+        <%= (1..n).map { |i| "x<#{i}>{}" }.join(', ') %>
     );
-    constexpr auto result = boost::hana::fold_left(tuple, state{}, f{});
-    (void)result;
+
+#if defined(METABENCH)
+    constexpr auto result = hana::fold_left(tuple, state{}, f{});
+#endif
 }

@@ -19,8 +19,10 @@ struct x { };
 
 int main() {
     constexpr auto tuple = hana::make_basic_tuple(
-        <%= (1..input_size).map { |n| "x<#{n}>{}" }.join(', ') %>
+        <%= (1..n).map { |i| "x<#{i}>{}" }.join(', ') %>
     );
+
+#if defined(METABENCH)
     constexpr auto result = hana::fold_left(tuple, state{}, f{});
-    (void)result;
+#endif
 }

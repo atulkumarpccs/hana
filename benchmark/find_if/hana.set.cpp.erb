@@ -3,25 +3,25 @@
 // (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
 #include <boost/hana/bool.hpp>
-#include <boost/hana/ext/std/integer_sequence.hpp>
 #include <boost/hana/find_if.hpp>
 #include <boost/hana/integral_constant.hpp>
-
-#include <utility>
+#include <boost/hana/set.hpp>
 namespace hana = boost::hana;
 
 
 struct is_last {
     template <typename N>
     constexpr auto operator()(N) const {
-        return hana::bool_c<N::value == <%= input_size %>>;
+        return hana::bool_c<N::value == <%= n %>>;
     }
 };
 
 int main() {
-    auto sequence = std::integer_sequence<
-        <%= (["int"] + (1..input_size).to_a).join(', ') %>
-    >{};
-    auto result = hana::find_if(sequence, is_last{});
-    (void)result;
+    constexpr auto set = hana::make_set(
+        <%= (1..n).map { |i| "hana::int_<#{i}>{}" }.join(', ') %>
+    );
+
+#if defined(METABENCH)
+    constexpr auto result = hana::find_if(set, is_last{});
+#endif
 }

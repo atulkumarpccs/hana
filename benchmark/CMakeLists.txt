@@ -83,3 +83,45 @@ foreach(benchmark IN LISTS BOOST_HANA_BENCHMARKS)
     add_custom_target(${target} DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${target}.json")
     add_dependencies(benchmarks ${target})
 endforeach()
+
+
+##############################################################################
+# New Metabench-based benchmark suite
+##############################################################################
+
+include(metabench)
+
+macro(add_dataset datasets dataset path_to_template range)
+    string(REGEX REPLACE "[^.]+[.][^.]+[.](.*)" "\\1" name ${dataset})
+    set(args ${path_to_template} ${range} NAME ${name} ${ARGN})
+
+    if(${dataset} MATCHES "fusion\\.|mpl\\.")
+        if (Boost_FOUND)
+            metabench_add_dataset(${dataset} ${args} MEDIAN_OF 3)
+            target_include_directories(${dataset} PUBLIC ${Boost_INCLUDE_DIRS})
+        endif()
+    elseif(${dataset} MATCHES "hana\\.")
+        metabench_add_dataset(${dataset} ${args} MEDIAN_OF 3)
+        target_include_directories(${dataset} PUBLIC ${Hana_INCLUDE_DIRS})
+    elseif (${dataset} MATCHES "std\\.")
+        metabench_add_dataset(${dataset} ${args} MEDIAN_OF 3)
+    else()
+        message(FATAL_ERROR
+            "The dataset named '${dataset}' does not appear to benchmark any "
+            "known metaprogramming library."
+        )
+    endif()
+
+    if (TARGET ${dataset})
+        list(APPEND ${datasets} ${dataset})
+    endif()
+endmacro()
+
+macro(add_chart target)
+    metabench_add_chart(${target} ${ARGN})
+    add_dependencies(benchmarks ${target})
+endmacro()
+
+foreach(benchmark_dir find_if fold_left)
+    add_subdirectory(${benchmark_dir})
+endforeach()

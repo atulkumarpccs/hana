@@ -2,10 +2,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
+<% if n > 20 %>
+    #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+    #define BOOST_MPL_LIMIT_VECTOR_SIZE <%= ((n + 9) / 10) * 10 %>
+<% end %>
+
 #include <boost/mpl/fold.hpp>
-#include <boost/mpl/push_back.hpp>
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/vector.hpp>
+namespace mpl = boost::mpl;
 
 
 template <typename State, typename X>
@@ -16,9 +21,11 @@ struct state { };
 template <int i>
 struct t { };
 
-using vector = <%= mpl_vector((1..input_size).to_a.map { |n| "t<#{n}>" }) %>;
+using vector = mpl::vector<<%= (1..n).to_a.map { |i| "t<#{i}>" }.join(', ') %>>;
 
-using result = boost::mpl::fold<vector, state, boost::mpl::quote2<f>>::type;
+#if defined(METABENCH)
+using result = mpl::fold<vector, state, mpl::quote2<f>>::type;
+#endif
 
 
 int main() { }
