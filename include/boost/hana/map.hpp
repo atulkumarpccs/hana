@@ -113,40 +113,10 @@ BOOST_HANA_NAMESPACE_BEGIN
 
             using hana_tag = map_tag;
 
-            template <typename ...P, typename = typename std::enable_if<
-                std::is_same<
-                    Storage,
-                    hana::basic_tuple<typename detail::decay<P>::type...>
-                >::value
-            >::type>
-            explicit constexpr map_impl(P&& ...pairs)
-                : storage{static_cast<P&&>(pairs)...}
-            { }
-
             explicit constexpr map_impl(Storage&& xs)
                 : storage(static_cast<Storage&&>(xs))
             { }
 
-            template <typename ...Dummy, typename = typename std::enable_if<
-                detail::storage_is_default_constructible<Storage, Dummy...>::value
-            >::type>
-            constexpr map_impl()
-                : storage()
-            { }
-
-            template <typename ...Dummy, typename = typename std::enable_if<
-                detail::storage_is_copy_constructible<Storage, Dummy...>::value
-            >::type>
-            constexpr map_impl(map_impl const& other)
-                : storage(other.storage)
-            { }
-
-            template <typename ...Dummy, typename = typename std::enable_if<
-                detail::storage_is_move_constructible<Storage, Dummy...>::value
-            >::type>
-            constexpr map_impl(map_impl&& other)
-                : storage(static_cast<Storage&&>(other.storage))
-            { }
 
             // Prevent the compiler from defining the default copy and move
             // constructors, which interfere with the SFINAE above.
@@ -157,7 +127,7 @@ BOOST_HANA_NAMESPACE_BEGIN
         template <typename Storage>
         struct KeyAtIndex {
             template <std::size_t i>
-            using apply = decltype(hana::first(hana::at_c<i>(std::declval<Storage>())));
+            using apply = decltype(hana::first(detail::__ebo_get<i>(std::declval<Storage>())));
         };
 
         template <typename ...Pairs>

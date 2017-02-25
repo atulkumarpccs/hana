@@ -41,17 +41,7 @@ BOOST_HANA_NAMESPACE_BEGIN
                 , private detail::ebo<detail::pix<0>, First>
                 , private detail::ebo<detail::pix<1>, Second>
     {
-        // Default constructor
-        template <typename ...dummy, typename = typename std::enable_if<
-            BOOST_HANA_TT_IS_CONSTRUCTIBLE(First, dummy...) &&
-            BOOST_HANA_TT_IS_CONSTRUCTIBLE(Second, dummy...)
-        >::type>
-        constexpr pair()
-            : detail::ebo<detail::pix<0>, First>()
-            , detail::ebo<detail::pix<1>, Second>()
-        { }
 
-        // Variadic constructors
         template <typename ...dummy, typename = typename std::enable_if<
             BOOST_HANA_TT_IS_CONSTRUCTIBLE(First, First const&, dummy...) &&
             BOOST_HANA_TT_IS_CONSTRUCTIBLE(Second, Second const&, dummy...)
@@ -60,65 +50,6 @@ BOOST_HANA_NAMESPACE_BEGIN
             : detail::ebo<detail::pix<0>, First>(fst)
             , detail::ebo<detail::pix<1>, Second>(snd)
         { }
-
-        template <typename T, typename U, typename = typename std::enable_if<
-            BOOST_HANA_TT_IS_CONVERTIBLE(T&&, First) &&
-            BOOST_HANA_TT_IS_CONVERTIBLE(U&&, Second)
-        >::type>
-        constexpr pair(T&& t, U&& u)
-            : detail::ebo<detail::pix<0>, First>(static_cast<T&&>(t))
-            , detail::ebo<detail::pix<1>, Second>(static_cast<U&&>(u))
-        { }
-
-
-        // Possibly converting copy and move constructors
-        template <typename T, typename U, typename = typename std::enable_if<
-            BOOST_HANA_TT_IS_CONSTRUCTIBLE(First, T const&) &&
-            BOOST_HANA_TT_IS_CONSTRUCTIBLE(Second, U const&) &&
-            BOOST_HANA_TT_IS_CONVERTIBLE(T const&, First) &&
-            BOOST_HANA_TT_IS_CONVERTIBLE(U const&, Second)
-        >::type>
-        constexpr pair(pair<T, U> const& other)
-            : detail::ebo<detail::pix<0>, First>(detail::ebo_get<detail::pix<0>>(other))
-            , detail::ebo<detail::pix<1>, Second>(detail::ebo_get<detail::pix<1>>(other))
-        { }
-
-        template <typename T, typename U, typename = typename std::enable_if<
-            BOOST_HANA_TT_IS_CONSTRUCTIBLE(First, T&&) &&
-            BOOST_HANA_TT_IS_CONSTRUCTIBLE(Second, U&&) &&
-            BOOST_HANA_TT_IS_CONVERTIBLE(T&&, First) &&
-            BOOST_HANA_TT_IS_CONVERTIBLE(U&&, Second)
-        >::type>
-        constexpr pair(pair<T, U>&& other)
-            : detail::ebo<detail::pix<0>, First>(static_cast<T&&>(detail::ebo_get<detail::pix<0>>(other)))
-            , detail::ebo<detail::pix<1>, Second>(static_cast<U&&>(detail::ebo_get<detail::pix<1>>(other)))
-        { }
-
-
-        // Copy and move assignment
-        template <typename T, typename U, typename = typename std::enable_if<
-            BOOST_HANA_TT_IS_ASSIGNABLE(First&, T const&) &&
-            BOOST_HANA_TT_IS_ASSIGNABLE(Second&, U const&)
-        >::type>
-        constexpr pair& operator=(pair<T, U> const& other) {
-            detail::ebo_get<detail::pix<0>>(*this) = detail::ebo_get<detail::pix<0>>(other);
-            detail::ebo_get<detail::pix<1>>(*this) = detail::ebo_get<detail::pix<1>>(other);
-            return *this;
-        }
-
-        template <typename T, typename U, typename = typename std::enable_if<
-            BOOST_HANA_TT_IS_ASSIGNABLE(First&, T&&) &&
-            BOOST_HANA_TT_IS_ASSIGNABLE(Second&, U&&)
-        >::type>
-        constexpr pair& operator=(pair<T, U>&& other) {
-            detail::ebo_get<detail::pix<0>>(*this) = static_cast<T&&>(detail::ebo_get<detail::pix<0>>(other));
-            detail::ebo_get<detail::pix<1>>(*this) = static_cast<U&&>(detail::ebo_get<detail::pix<1>>(other));
-            return *this;
-        }
-
-        // Prevent the compiler from defining the default copy and move
-        // constructors, which interfere with the SFINAE above.
-        ~pair() = default;
 
         friend struct first_impl<pair_tag>;
         friend struct second_impl<pair_tag>;
