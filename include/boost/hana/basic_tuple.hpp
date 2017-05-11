@@ -39,6 +39,7 @@ BOOST_HANA_NAMESPACE_BEGIN
         //////////////////////////////////////////////////////////////////////
         template <std::size_t> struct bti; // basic_tuple_index
 
+        struct variadic_ { };
         struct from_other { };
 
         template <typename Indices, typename ...Xn>
@@ -48,8 +49,6 @@ BOOST_HANA_NAMESPACE_BEGIN
         struct basic_tuple_impl<std::index_sequence<n...>, Xn...>
             : detail::ebo<bti<n>, Xn>...
         {
-            static constexpr std::size_t size_ = sizeof...(Xn);
-
             constexpr basic_tuple_impl() = default;
 
             template <typename Other>
@@ -58,7 +57,7 @@ BOOST_HANA_NAMESPACE_BEGIN
             { }
 
             template <typename ...Yn>
-            explicit constexpr basic_tuple_impl(Yn&& ...yn)
+            explicit constexpr basic_tuple_impl(detail::variadic_, Yn&& ...yn)
                 : detail::ebo<bti<n>, Xn>(static_cast<Yn&&>(yn))...
             { }
         };
@@ -72,6 +71,7 @@ BOOST_HANA_NAMESPACE_BEGIN
     struct basic_tuple final
         : detail::basic_tuple_impl<std::make_index_sequence<sizeof...(Xn)>, Xn...>
     {
+        static constexpr std::size_t size_ = sizeof...(Xn);
         using Base = detail::basic_tuple_impl<std::make_index_sequence<sizeof...(Xn)>, Xn...>;
 
         constexpr basic_tuple() = default;
@@ -86,7 +86,7 @@ BOOST_HANA_NAMESPACE_BEGIN
 
         template <typename ...Yn>
         explicit constexpr basic_tuple(Yn&& ...yn)
-            : Base(static_cast<Yn&&>(yn)...)
+            : Base(detail::variadic_{}, static_cast<Yn&&>(yn)...)
         { }
     };
     //! @endcond

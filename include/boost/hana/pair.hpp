@@ -42,14 +42,7 @@ BOOST_HANA_NAMESPACE_BEGIN
                 , private detail::ebo<detail::pix<1>, Second>
     {
         // Default constructor
-        template <typename ...dummy, typename = typename std::enable_if<
-            BOOST_HANA_TT_IS_CONSTRUCTIBLE(First, dummy...) &&
-            BOOST_HANA_TT_IS_CONSTRUCTIBLE(Second, dummy...)
-        >::type>
-        constexpr pair()
-            : detail::ebo<detail::pix<0>, First>()
-            , detail::ebo<detail::pix<1>, Second>()
-        { }
+        constexpr pair() = default;
 
         // Variadic constructors
         template <typename ...dummy, typename = typename std::enable_if<
@@ -70,8 +63,12 @@ BOOST_HANA_NAMESPACE_BEGIN
             , detail::ebo<detail::pix<1>, Second>(static_cast<U&&>(u))
         { }
 
+        // Non-converting copy and move constructors (provided separately from
+        // the converting ones to allow trivial constructibility)
+        constexpr pair(pair const&) = default;
+        constexpr pair(pair&&) = default;
 
-        // Possibly converting copy and move constructors
+        // Converting copy and move constructors
         template <typename T, typename U, typename = typename std::enable_if<
             BOOST_HANA_TT_IS_CONSTRUCTIBLE(First, T const&) &&
             BOOST_HANA_TT_IS_CONSTRUCTIBLE(Second, U const&) &&
@@ -115,10 +112,6 @@ BOOST_HANA_NAMESPACE_BEGIN
             hana::second(*this) = hana::second(static_cast<pair<T, U>&&>(other));
             return *this;
         }
-
-        // Prevent the compiler from defining the default copy and move
-        // constructors, which interfere with the SFINAE above.
-        ~pair() = default;
 
         friend struct first_impl<pair_tag>;
         friend struct second_impl<pair_tag>;

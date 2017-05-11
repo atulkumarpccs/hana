@@ -14,7 +14,7 @@ struct never { static constexpr bool value = false; };
 
 struct NoValueCtor {
     NoValueCtor() : id(++count) {}
-    NoValueCtor(NoValueCtor const & other) : id(other.id) { ++count; }
+    NoValueCtor(NoValueCtor const& other) : id(other.id) { ++count; }
 
     // The constexpr is required to make is_constructible instantiate this
     // template. The explicit is needed to test-around a similar bug with

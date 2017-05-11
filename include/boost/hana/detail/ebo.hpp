@@ -11,10 +11,21 @@ Distributed under the Boost Software License, Version 1.0.
 #define BOOST_HANA_DETAIL_EBO_HPP
 
 #include <boost/hana/config.hpp>
+#include <boost/hana/detail/decay.hpp>
 #include <boost/hana/detail/intrinsics.hpp>
+
+#include <type_traits>
 
 
 namespace _hana {
+    template <bool IsEbo, typename V, typename T>
+    struct ebo_constructible;
+
+    template <typename V, typename T>
+    struct ebo_constructible<false, V, T>
+        : std::enable_if<BOOST_HANA_TT_IS_CONSTRUCTIBLE(V, T&&)>
+    { };
+
     //////////////////////////////////////////////////////////////////////////
     // ebo<K, V>
     //
@@ -24,13 +35,8 @@ namespace _hana {
     // other widely used types such as `hana::pair`.
     //
     // When available, we use compiler intrinsics to reduce the number
-    // of instantiations.
-    //
-    // `ebo` provides a limited set of constructors to reduce instantiations.
-    // Also, the constructors are open-ended and they do not check for the
-    // validity of their arguments, again to reduce compile-time costs.
-    // Users of `ebo` should make sure that they only try to construct an
-    // `ebo` from a compatible value.
+    // of instantiations. We also try to provide the minimum set of
+    // constructors to reduce the number of instantiations.
     //
     // EBOs can be indexed using an arbitrary type. The recommended usage is
     // to define an integrap constant wrapper for the specific container using
@@ -55,9 +61,15 @@ namespace _hana {
     // Specialize storage for empty types
     template <typename K, typename V>
     struct ebo<K, V, true> : V {
-        constexpr ebo() { }
+        constexpr ebo() = default;
+        constexpr ebo(ebo const&) = default;
+        constexpr ebo(ebo&&) = default;
+        constexpr ebo& operator=(ebo const&) = default;
+        constexpr ebo& operator=(ebo&&) = default;
 
-        template <typename T>
+        template <typename T, typename = typename ebo_constructible<
+            std::is_same<ebo, typename boost::hana::detail::decay<T>::type>::value, V, T
+        >::type>
         explicit constexpr ebo(T&& t)
             : V(static_cast<T&&>(t))
         { }
@@ -66,14 +78,20 @@ namespace _hana {
     // Specialize storage for non-empty types
     template <typename K, typename V>
     struct ebo<K, V, false> {
-        constexpr ebo() : data_() { }
+        constexpr ebo() = default;
+        constexpr ebo(ebo const&) = default;
+        constexpr ebo(ebo&&) = default;
+        constexpr ebo& operator=(ebo const&) = default;
+        constexpr ebo& operator=(ebo&&) = default;
 
-        template <typename T>
+        template <typename T, typename = typename ebo_constructible<
+            std::is_same<ebo, typename boost::hana::detail::decay<T>::type>::value, V, T
+        >::type>
         explicit constexpr ebo(T&& t)
             : data_(static_cast<T&&>(t))
         { }
 
-        V data_;
+        V data_{};
     };
 
     //////////////////////////////////////////////////////////////////////////
