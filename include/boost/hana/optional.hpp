@@ -271,8 +271,8 @@ BOOST_HANA_NAMESPACE_BEGIN
 
     template <>
     struct ap_impl<optional_tag> {
-        template <typename F, typename X>
-        static constexpr auto ap_helper(F&&, X&&, ...)
+        template <typename F, typename X, typename ...Whatever>
+        static constexpr auto ap_helper(F&&, X&&, Whatever ...)
         { return hana::nothing; }
 
         template <typename F, typename X>

@@ -274,7 +274,7 @@ BOOST_HANA_NAMESPACE_BEGIN
     template <>
     struct insert_impl<map_tag> {
         template <typename Map, typename Pair>
-        static constexpr auto helper(Map&& map, Pair&& pair, ...) {
+        static constexpr auto helper(Map&& map, Pair&& pair, hana::optional<>) {
             using RawMap = typename std::remove_reference<Map>::type;
             using HashTable = typename RawMap::hash_table_type;
             using NewHashTable = typename detail::bucket_insert<
