@@ -46,7 +46,7 @@ BOOST_HANA_NAMESPACE_BEGIN
         template <std::size_t N>
         struct permutation_indices {
             static constexpr auto value =
-                detail::array<std::size_t, N>{}.iota(0).permutations();
+                detail::array<std::size_t, N>{}.iota(static_cast<std::size_t>(0)).permutations();
         };
     }
 
