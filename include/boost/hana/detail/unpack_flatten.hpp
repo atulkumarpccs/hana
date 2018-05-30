@@ -56,7 +56,7 @@ BOOST_HANA_NAMESPACE_BEGIN namespace detail {
         template <typename ...Xs>
         auto operator()(Xs const& ...xs) const -> detail::flatten_indices<
             decltype(hana::length(xs))::value...
-        >;
+        > { return {}; }
     };
 
     template <typename Xs, typename F>
