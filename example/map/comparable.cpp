@@ -21,7 +21,7 @@ int main() {
         )
         ==
         hana::make_map(
-            hana::make_pair(hana::type_c<int&&>, (void*)0),
+            hana::make_pair(hana::type_c<int&&>, nullptr),
             hana::make_pair(hana::char_c<'a'>, "foobar"s)
         )
     );
