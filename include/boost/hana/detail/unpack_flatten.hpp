@@ -27,7 +27,7 @@ BOOST_HANA_NAMESPACE_BEGIN namespace detail {
         // avoid empty arrays by appending 0 to `lengths`
         static constexpr std::size_t lengths[sizeof...(Lengths) + 1] = {Lengths..., 0};
         static constexpr auto flat_length =
-            detail::accumulate(lengths, lengths + sizeof...(Lengths), 0);
+            detail::accumulate(lengths, lengths + sizeof...(Lengths), static_cast<std::size_t>(0));
 
         template <bool Inner>
         static constexpr auto compute() {
